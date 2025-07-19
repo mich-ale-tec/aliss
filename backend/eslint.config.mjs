@@ -23,4 +23,7 @@ export default defineConfig([
             'no-unused-vars': 'error',
         },
     },
+    {
+        ignores: ['**/build', '**/dist'],
+    },
 ]);

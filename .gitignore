@@ -2,6 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=node
 
 ### Node ###
+**/**/node-modules
 # Logs
 logs
 *.log
@@ -12,7 +13,7 @@ lerna-debug.log*
 .pnpm-debug.log*
 
 # production
-/build
+**/**/build
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
