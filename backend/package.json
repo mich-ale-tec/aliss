@@ -1,0 +1,35 @@
+{
+    "name": "backend",
+    "version": "1.0.0",
+    "description": "Servicios para proporcionar preguntas",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "rm -rf build && npx mkdirp build/src && tsc --project ./",
+        "b": "rm -rf build && npx mkdirp build/src && tsc --project ./ --watch",
+        "start": "nodemon index.ts",
+        "format": "prettier --write \"src/**/*.{ts,js,json,md}\""
+    },
+    "keywords": [
+        "futbol",
+        "liga1",
+        "perufutbol"
+    ],
+    "author": "Mich Ale",
+    "license": "MIT",
+    "devDependencies": {
+        "@eslint/js": "^9.31.0",
+        "@types/koa": "^2.15.0",
+        "@types/node": "^24.0.14",
+        "eslint": "^9.31.0",
+        "eslint-config-prettier": "^10.1.8",
+        "globals": "^16.3.0",
+        "nodemon": "^3.1.10",
+        "prettier": "3.6.2",
+        "ts-node": "^10.9.2",
+        "typescript-eslint": "^8.37.0"
+    },
+    "dependencies": {
+        "koa": "^3.0.0"
+    }
+}
