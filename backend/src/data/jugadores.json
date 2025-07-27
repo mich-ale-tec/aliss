@@ -1,0 +1,285 @@
+[
+    {
+        "Codigo": 1,
+        "Equipo": 1,
+        "ApellidoPaterno": "Riveros",
+        "ApellidoMaterno": "Ibáñez",
+        "Nombres": "Williams"
+    },
+    {
+        "Codigo": 2,
+        "Equipo": 1,
+        "ApellidoPaterno": "Corzo",
+        "ApellidoMaterno": "Chávez",
+        "Nombres": "Aldo"
+    },
+    {
+        "Codigo": 3,
+        "Equipo": 1,
+        "ApellidoPaterno": "Di Benedetto",
+        "ApellidoMaterno": "",
+        "Nombres": "Matías"
+    },
+    {
+        "Codigo": 4,
+        "Equipo": 1,
+        "ApellidoPaterno": "Dulanto",
+        "ApellidoMaterno": "Sanguinetti",
+        "Nombres": "Gustavo"
+    },
+    {
+        "Codigo": 5,
+        "Equipo": 1,
+        "ApellidoPaterno": "Reyna",
+        "ApellidoMaterno": "Lea",
+        "Nombres": "Paolo"
+    },
+    {
+        "Codigo": 6,
+        "Equipo": 1,
+        "ApellidoPaterno": "Carabalí",
+        "ApellidoMaterno": "Prado",
+        "Nombres": "José"
+    },
+    {
+        "Codigo": 7,
+        "Equipo": 1,
+        "ApellidoPaterno": "Calcaterra",
+        "ApellidoMaterno": "Thomas",
+        "Nombres": "Horacio"
+    },
+    {
+        "Codigo": 8,
+        "Equipo": 1,
+        "ApellidoPaterno": "Costa",
+        "ApellidoMaterno": "Heredia",
+        "Nombres": "Gabriel"
+    },
+    {
+        "Codigo": 9,
+        "Equipo": 1,
+        "ApellidoPaterno": "Rivera",
+        "ApellidoMaterno": "Martínez",
+        "Nombres": "José"
+    },
+    {
+        "Codigo": 10,
+        "Equipo": 1,
+        "ApellidoPaterno": "Valera",
+        "ApellidoMaterno": "Sandoval",
+        "Nombres": "Alex"
+    },
+
+    {
+        "Codigo": 11,
+        "Equipo": 2,
+        "ApellidoPaterno": "Garcés",
+        "ApellidoMaterno": "Mori",
+        "Nombres": "Renzo"
+    },
+    {
+        "Codigo": 12,
+        "Equipo": 2,
+        "ApellidoPaterno": "Noriega",
+        "ApellidoMaterno": "Loret de la Mola",
+        "Nombres": "Erick"
+    },
+    {
+        "Codigo": 13,
+        "Equipo": 2,
+        "ApellidoPaterno": "Zambrano",
+        "ApellidoMaterno": "Ochandarte",
+        "Nombres": "Carlos"
+    },
+    {
+        "Codigo": 14,
+        "Equipo": 2,
+        "ApellidoPaterno": "Trauco",
+        "ApellidoMaterno": "Saavedra",
+        "Nombres": "Miguel"
+    },
+    {
+        "Codigo": 15,
+        "Equipo": 2,
+        "ApellidoPaterno": "Guerrero",
+        "ApellidoMaterno": "Gonzales",
+        "Nombres": "Paolo"
+    },
+    {
+        "Codigo": 16,
+        "Equipo": 2,
+        "ApellidoPaterno": "Barcos",
+        "ApellidoMaterno": "",
+        "Nombres": "Hernán"
+    },
+    {
+        "Codigo": 17,
+        "Equipo": 2,
+        "ApellidoPaterno": "Lavandeira",
+        "ApellidoMaterno": "Hernández",
+        "Nombres": "Pablo"
+    },
+    {
+        "Codigo": 18,
+        "Equipo": 2,
+        "ApellidoPaterno": "Castillo",
+        "ApellidoMaterno": "Molina",
+        "Nombres": "Jesús"
+    },
+    {
+        "Codigo": 19,
+        "Equipo": 2,
+        "ApellidoPaterno": "Quevedo",
+        "ApellidoMaterno": "Mathey",
+        "Nombres": "Kevin"
+    },
+    {
+        "Codigo": 20,
+        "Equipo": 2,
+        "ApellidoPaterno": "Viscarra",
+        "ApellidoMaterno": "Bruckner",
+        "Nombres": "Guillermo"
+    },
+
+    {
+        "Codigo": 21,
+        "Equipo": 3,
+        "ApellidoPaterno": "Enríquez",
+        "ApellidoMaterno": "Gutiérrez",
+        "Nombres": "Diego"
+    },
+    {
+        "Codigo": 22,
+        "Equipo": 3,
+        "ApellidoPaterno": "Chávez",
+        "ApellidoMaterno": "Massoni",
+        "Nombres": "Gianfranco"
+    },
+    {
+        "Codigo": 23,
+        "Equipo": 3,
+        "ApellidoPaterno": "Lutiger",
+        "ApellidoMaterno": "Vidalón",
+        "Nombres": "Rafael"
+    },
+    {
+        "Codigo": 24,
+        "Equipo": 3,
+        "ApellidoPaterno": "Lora",
+        "ApellidoMaterno": "Saavedra",
+        "Nombres": "Jhilmar"
+    },
+    {
+        "Codigo": 25,
+        "Equipo": 3,
+        "ApellidoPaterno": "Pasquini",
+        "ApellidoMaterno": "",
+        "Nombres": "Nicolás"
+    },
+    {
+        "Codigo": 26,
+        "Equipo": 3,
+        "ApellidoPaterno": "Sosa",
+        "ApellidoMaterno": "Toranza",
+        "Nombres": "Leandro"
+    },
+    {
+        "Codigo": 27,
+        "Equipo": 3,
+        "ApellidoPaterno": "Yotún",
+        "ApellidoMaterno": "Flores",
+        "Nombres": "Yoshimar"
+    },
+    {
+        "Codigo": 28,
+        "Equipo": 3,
+        "ApellidoPaterno": "Cauteruccio",
+        "ApellidoMaterno": "Rodríguez",
+        "Nombres": "Martín"
+    },
+    {
+        "Codigo": 29,
+        "Equipo": 3,
+        "ApellidoPaterno": "Ávila",
+        "ApellidoMaterno": "Acero",
+        "Nombres": "Írven"
+    },
+    {
+        "Codigo": 30,
+        "Equipo": 3,
+        "ApellidoPaterno": "Iberico",
+        "ApellidoMaterno": "Robalino",
+        "Nombres": "Luis"
+    },
+
+    {
+        "Codigo": 31,
+        "Equipo": 4,
+        "ApellidoPaterno": "Garcés",
+        "ApellidoMaterno": "Acosta",
+        "Nombres": "Carlos"
+    },
+    {
+        "Codigo": 32,
+        "Equipo": 4,
+        "ApellidoPaterno": "Mera",
+        "ApellidoMaterno": "Cáceres",
+        "Nombres": "Germán"
+    },
+    {
+        "Codigo": 33,
+        "Equipo": 4,
+        "ApellidoPaterno": "Valoyes",
+        "ApellidoMaterno": "Córdoba",
+        "Nombres": "Jimmy"
+    },
+    {
+        "Codigo": 34,
+        "Equipo": 4,
+        "ApellidoPaterno": "Amondarain",
+        "ApellidoMaterno": "Colzada",
+        "Nombres": "Maximiliano"
+    },
+    {
+        "Codigo": 35,
+        "Equipo": 4,
+        "ApellidoPaterno": "Ortiz",
+        "ApellidoMaterno": "Pérez",
+        "Nombres": "João"
+    },
+    {
+        "Codigo": 36,
+        "Equipo": 4,
+        "ApellidoPaterno": "Neira",
+        "ApellidoMaterno": "Herrera",
+        "Nombres": "Cristian"
+    },
+    {
+        "Codigo": 37,
+        "Equipo": 4,
+        "ApellidoPaterno": "Benítes",
+        "ApellidoMaterno": "Vargas",
+        "Nombres": "Luis"
+    },
+    {
+        "Codigo": 38,
+        "Equipo": 4,
+        "ApellidoPaterno": "Luiz",
+        "ApellidoMaterno": "Da Silva",
+        "Nombres": "Silva"
+    },
+    {
+        "Codigo": 39,
+        "Equipo": 4,
+        "ApellidoPaterno": "Torrejón",
+        "ApellidoMaterno": "Tineo",
+        "Nombres": "Claudio"
+    },
+    {
+        "Codigo": 40,
+        "Equipo": 4,
+        "ApellidoPaterno": "La Torre",
+        "ApellidoMaterno": "Arana",
+        "Nombres": "Didier"
+    }
+]

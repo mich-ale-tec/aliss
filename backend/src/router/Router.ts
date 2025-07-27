@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import Router from '@koa/router';
-import RouterEquipos from './equipos/RouterEquipos';
+import RCuestionario from './Cuestionario/Router';
 
 export default class RouterApp {
     private readonly prefijo: string;
@@ -15,15 +15,9 @@ export default class RouterApp {
     get obtenerRouter() {
         return this.router;
     }
-    // Publicas
     public construirRutas() {
-        this.obtenerRutasEquipos('equipos');
-        this.router.use(
-            ...this.routes.flatMap((r) => [r.routes(), r.allowedMethods()]),
-        );
-    }
-    // Privadas
-    private obtenerRutasEquipos(prefix: string) {
-        this.routes.push(new RouterEquipos(prefix).construirRutas());
+        this.routes.push(new RCuestionario('Cuestionario').construirRutas());
+        const METODOS = this.routes.flatMap(r => [r.routes(), r.allowedMethods()]);
+        this.router.use(...METODOS);
     }
 }

@@ -3,10 +3,10 @@ import Router from './src/router/Router';
 
 // Servidor
 const server = new Server();
+server.cargarAdministradorError();
 server.cargarConfiguracion();
 server.cargarPlugins();
 server.cargarLimites();
-server.cargarAdministradorError();
 // Router
 const router = new Router();
 router.construirRutas();

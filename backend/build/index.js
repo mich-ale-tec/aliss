@@ -7,10 +7,10 @@ const Server_1 = __importDefault(require("./src/server/Server"));
 const Router_1 = __importDefault(require("./src/router/Router"));
 // Servidor
 const server = new Server_1.default();
+server.cargarAdministradorError();
 server.cargarConfiguracion();
 server.cargarPlugins();
 server.cargarLimites();
-server.cargarAdministradorError();
 // Router
 const router = new Router_1.default();
 router.construirRutas();

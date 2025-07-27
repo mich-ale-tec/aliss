@@ -1,4 +1,4 @@
-import koa from 'koa';
+import koa, { ParameterizedContext } from 'koa';
 import logger from 'koa-logger';
 import 'dotenv/config';
 import helmet from 'koa-helmet';
@@ -16,7 +16,7 @@ export default class Server {
     constructor() {
         this.app = new koa();
         this.port = Number(process.env.PUERTO || '3100');
-        this.listaBlanca = ['localhost'];
+        this.listaBlanca = ['localhost', 'http://localhost:5173'];
     }
     // Public
     public cargarConfiguracion() {
@@ -33,13 +33,7 @@ export default class Server {
     }
     public cargarAdministradorError() {
         this.app.on('error', (err, ctx) => {
-            if (!ctx.statusCode) {
-                ctx.status = 500;
-            }
-            ctx.throw(ctx.statusCode, {
-                error: err,
-                errDescripcion: err.message,
-            });
+            console.error(err);
         });
     }
     public inyectarRutas(router: Router) {
@@ -73,7 +67,7 @@ export default class Server {
     }
     private opcionesCors(): cors.Options {
         return {
-            origin: (ctx) => {
+            origin: ctx => {
                 const ORIGEN = ctx.request.header.origin || '';
                 if (ctx.origin && !this.listaBlanca.includes(ORIGEN)) {
                     ctx.throw(403, 'Origin not allowed by CORS');

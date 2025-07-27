@@ -1,0 +1,26 @@
+[
+    {
+        "Codigo": 1,
+        "Nombre": "Universitario",
+        "Breve": "U",
+        "Descripcion": "La garra del único grande"
+    },
+    {
+        "Codigo": 2,
+        "Nombre": "Alianza Lima",
+        "Breve": "AL",
+        "Descripcion": "Alianza Lima es el Perú, el Perú es Alianza Lima"
+    },
+    {
+        "Codigo": 3,
+        "Nombre": "Sporting Cristal",
+        "Breve": "SC",
+        "Descripcion": "Raza Celeste"
+    },
+    {
+        "Codigo": 4,
+        "Nombre": "Cienciano",
+        "Breve": "C",
+        "Descripcion": "El amor de un Cienciano, es puro como la nieve"
+    }
+]
