@@ -5,11 +5,14 @@
     import CPregunta from '$lib/core/preguntas/Application/Pregunta.js';
     import Icon from '@iconify/svelte';
     import Resultado from '$lib/components/Resultado.svelte';
+    import Progress from '$lib/components/Progress.svelte';
+    import UsoCasoAlmacenarResultado from '$lib/core/Respuesta/Application/UsoCasoAlmacenarResultado.js';
 
+    const resultado = new UsoCasoAlmacenarResultado('1');
     // Variables
     const PREGUNTAS: TEntityMain[] = [];
     const NRO_PREGUNTA: number = 0;
-    const SE_TERMINO: boolean = false;
+    const SE_TERMINO: boolean = resultado.existeResultado();
     const RESPUESTA: string = '';
     // State
     let Preguntas = $state(PREGUNTAS);
@@ -17,7 +20,7 @@
     let SeTermino = $state(SE_TERMINO);
     let Respuesta = $state(RESPUESTA);
     // Clase
-    const pregunta = new CPregunta(PREGUNTAS, SE_TERMINO, NRO_PREGUNTA, RESPUESTA);
+    const pregunta = new CPregunta(PREGUNTAS, NRO_PREGUNTA, RESPUESTA);
     // Eventos Runas
     const Props: IModificarPregunta = {
         terminarCuestionario: () => (SeTermino = true),
@@ -32,7 +35,7 @@
 
 <div class="contenedor">
     {#if SeTermino}
-        {#await pregunta.validarRespuestas()}
+        {#await pregunta.validarRespuestas(resultado)}
             <h3>Cargando...</h3>
         {:then valor}
             <Resultado resultado={valor} />
@@ -40,10 +43,7 @@
             <p>¡No pudimos validar tus respuestas! Lo sentimos</p>
         {/await}
     {:else if Preguntas.length > 0}
-        <h5 class="subtitle is-5">Pregunta {NroPregunta + 1} de {Preguntas.length}</h5>
-        <progress class="progress progress-preguntas" value={NroPregunta + 1} max={Preguntas.length}>
-            {NroPregunta}
-        </progress>
+        <Progress nroPregunta={NroPregunta} nroPreguntas={Preguntas.length} />
         {#key Preguntas[NroPregunta].id}
             <Pregunta pregunta={Preguntas[NroPregunta]} bind:respuesta={Respuesta} />
             <button
@@ -63,9 +63,6 @@
         width: 80%;
         margin-left: auto;
         margin-right: auto;
-        .progress-preguntas {
-            --bulma-progress-value-background-color: #725752;
-        }
         .btn-siguiente {
             color: white;
             background-color: #725752;

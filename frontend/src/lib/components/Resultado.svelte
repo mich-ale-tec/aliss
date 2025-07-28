@@ -15,6 +15,7 @@
 <div class="contenedor">
     <Icon icon="noto:trophy" width="128" height="128" />
     <h2 class="title is-4 mt-2">¡Quizz Completado!</h2>
+    <h5 class="subtitle is-6 mt-1">¡Vuelva mañana!</h5>
     <h4 class="resultado-text subtitle is-1">
         {resultado.Correctas}/{TOTAL}
     </h4>

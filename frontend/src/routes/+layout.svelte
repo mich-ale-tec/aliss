@@ -19,7 +19,7 @@
             <a href="/" class="navbar-item has-text-weight-bold"
                 ><Icon icon="material-symbols:home-rounded" width="30" /> Inicio</a>
             <a href="/preguntas" class="navbar-item has-text-weight-bold"
-                ><Icon icon="solar:book-bold" width="30" /> Preguntas</a>
+                ><Icon icon="solar:book-bold" width="30" /> Quizz Jugadores</a>
         </div>
     </div>
 </nav>
