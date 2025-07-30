@@ -31,7 +31,7 @@ export const mostrarToast = (payload: TToastStore) =>
                 Icono: '',
                 Tipo: 'info',
             });
-        }, 2000);
+        }, 4000);
         return {
             Mostrar: true,
             Texto: payload.Texto,

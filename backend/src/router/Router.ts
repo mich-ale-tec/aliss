@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import Router from '@koa/router';
 import RCuestionario from './Cuestionario/Router';
+import RAdministracion from './Administracion/Router';
 
 export default class RouterApp {
     private readonly prefijo: string;
@@ -15,8 +16,9 @@ export default class RouterApp {
     get obtenerRouter() {
         return this.router;
     }
-    public construirRutas() {
-        this.routes.push(new RCuestionario('Cuestionario').construirRutas());
+    public async construirRutas(): Promise<void> {
+        this.routes.push(await new RCuestionario('Cuestionario').construirRutas());
+        this.routes.push(await new RAdministracion('Administracion').construirRutas());
         const METODOS = this.routes.flatMap(r => [r.routes(), r.allowedMethods()]);
         this.router.use(...METODOS);
     }

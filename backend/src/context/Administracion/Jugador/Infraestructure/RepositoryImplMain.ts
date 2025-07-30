@@ -1,0 +1,71 @@
+import { RepositoryImplMongoGenerico as RepoImplMongoGene } from '../../../shared/Infraestructure/RepositoryImplMongoGenerico';
+import { TJugador } from '../Domain/TJugador';
+import { RepositoryMain } from '../Domain/RepositoryMain';
+import { AdapterConfigure as AC } from './AdapterConfigure';
+import { pipeline } from '../../../shared/Domain/EntityUpdate';
+import { TOptions } from '../../../shared/Domain/RepositoryGenerico';
+import { TRequestAgregar, TRequestEditar } from '../Domain/TRequest';
+import { UpdateFilter, Filter } from 'mongodb';
+
+export class RepositoryImplMain extends RepoImplMongoGene<TJugador> implements RepositoryMain {
+    constructor() {
+        super(AC.URI, AC.DATABASE, AC.SCHEMA, AC.ENTITY);
+    }
+    async obtener(opciones: TOptions): Promise<TJugador[]> {
+        const pipe: Array<pipeline> = [{ $match: {} }];
+        return await this.find(opciones.Client, pipe);
+    }
+    async obtenerJugadoresPorEquipo(equipo: number, opciones: TOptions): Promise<TJugador[]> {
+        const pipe: Array<pipeline> = [{ $match: { Equipo: equipo } }];
+        return await this.find(opciones.Client, pipe);
+    }
+    async obtenerJugadorPorCodigo(codigo: TJugador['Codigo'], opcion: TOptions): Promise<TJugador> {
+        const pipe: Array<pipeline> = [{ $match: { Codigo: codigo } }];
+        const JUGADORES = await this.find(opcion.Client, pipe);
+        const [JUGADOR] = JUGADORES;
+        if (!JUGADOR) throw new Error('¡No se encontró el jugador!');
+        return JUGADOR;
+    }
+    async editar(body: TRequestEditar, opciones: TOptions): Promise<void> {
+        if (!opciones.Session) throw new Error('¡No existe sessión!');
+        const FILTER: Filter<TJugador> = { Codigo: body.Codigo };
+        const UPDATE: UpdateFilter<TJugador> = {
+            $set: {
+                Numero: body.Numero,
+                ApellidoPaterno: body.ApellidoPaterno,
+                ApellidoMaterno: body.ApellidoMaterno,
+                Nombres: body.Nombres,
+                Posicion: body.Posicion,
+                Edad: body.Edad,
+                Nacionalidad: body.Nacionalidad,
+            },
+        };
+        await this.updateOne(opciones.Client, opciones.Session, FILTER, UPDATE);
+    }
+    async agregar(body: TRequestAgregar, opciones: TOptions): Promise<TJugador> {
+        if (!opciones.Session) throw new Error('¡No se tiene una sesión!');
+        const CODIGO = await this.obtenerCodigo(opciones);
+        const JUGADOR: TJugador = {
+            Codigo: CODIGO,
+            Equipo: body.Equipo,
+            ApellidoPaterno: body.ApellidoPaterno,
+            ApellidoMaterno: body.ApellidoMaterno,
+            Nombres: body.Nombres,
+            Numero: body.Numero,
+            Posicion: body.Posicion,
+            Edad: body.Edad,
+            Nacionalidad: body.Nacionalidad,
+        };
+        await this.saveOne(opciones.Client, opciones.Session, JUGADOR);
+        return JUGADOR;
+    }
+    private async obtenerCodigo(opciones: TOptions): Promise<TJugador['Codigo']> {
+        const pipe: Array<pipeline> = [
+            { $group: { _id: null, Codigo: { $max: '$Codigo' } } },
+            { $project: { _id: 0, Codigo: 1 } },
+            { $limit: 1 },
+        ];
+        const JUGADORES = await this.find(opciones.Client, pipe);
+        return JUGADORES.length > 0 ? JUGADORES[0].Codigo + 1 : 1;
+    }
+}

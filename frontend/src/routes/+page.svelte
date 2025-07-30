@@ -2,7 +2,6 @@
     import { PUBLIC_URL_BACKEND } from '$env/static/public';
     import Icon from '@iconify/svelte';
     import { onMount } from 'svelte';
-
     onMount(() => {
         window.localStorage.setItem('URL_BACKEND', PUBLIC_URL_BACKEND);
     });

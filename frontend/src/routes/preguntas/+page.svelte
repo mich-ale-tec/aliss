@@ -12,7 +12,8 @@
     // Variables
     const PREGUNTAS: TEntityMain[] = [];
     const NRO_PREGUNTA: number = 0;
-    const SE_TERMINO: boolean = resultado.existeResultado();
+    // const SE_TERMINO: boolean = resultado.existeResultado();
+    const SE_TERMINO: boolean = false;
     const RESPUESTA: string = '';
     // State
     let Preguntas = $state(PREGUNTAS);

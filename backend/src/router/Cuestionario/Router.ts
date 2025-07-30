@@ -9,9 +9,9 @@ export default class RouterCuestionario extends RouterAbstrac {
         super(prefix);
     }
     // Publicas
-    public construirRutas() {
-        this.routes.push(new RPregunta('Pregunta').construirRutas());
-        this.routes.push(new RRespuesta('Respuesta').construirRutas());
+    public async construirRutas() {
+        this.routes.push(await new RPregunta('Pregunta').construirRutas());
+        this.routes.push(await new RRespuesta('Respuesta').construirRutas());
         const METODOS = this.routes.flatMap(r => [r.routes(), r.allowedMethods()]);
         this.router.use(...METODOS);
         return this.router;

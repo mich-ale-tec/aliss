@@ -6,13 +6,13 @@ export default class Router extends RouterAbstrac {
     constructor(prefix: string) {
         super(prefix);
     }
-    public construirRutas() {
+    public async construirRutas() {
         this.router.get('/obtener', this.obtener);
         return this.router;
     }
     private async obtener(ctx: ParameterizedContext) {
         try {
-            const preguntas = await new UsoCasoObtenerPreguntas().init();
+            const preguntas = await new UsoCasoObtenerPreguntas().iniciar();
             ctx.body = JSON.stringify(preguntas);
         } catch (error) {
             console.log(error);

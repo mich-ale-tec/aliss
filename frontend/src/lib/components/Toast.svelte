@@ -27,7 +27,7 @@
         margin-top: 20px;
         margin-right: auto;
         margin-left: auto;
-        position: absolute;
+        position: fixed;
         z-index: 9999;
         display: flex;
         border-radius: 10px 0 0 10px;

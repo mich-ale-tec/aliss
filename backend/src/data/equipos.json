@@ -3,24 +3,28 @@
         "Codigo": 1,
         "Nombre": "Universitario",
         "Breve": "U",
-        "Descripcion": "La garra del único grande"
+        "Descripcion": "La garra del único grande",
+        "Logo": "https://upload.wikimedia.org/wikipedia/commons/6/67/Logo_oficial_de_Universitario.png"
     },
     {
         "Codigo": 2,
         "Nombre": "Alianza Lima",
         "Breve": "AL",
-        "Descripcion": "Alianza Lima es el Perú, el Perú es Alianza Lima"
+        "Descripcion": "Alianza Lima es el Perú, el Perú es Alianza Lima",
+        "Logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Escudo_Alianza_Lima.svg/800px-Escudo_Alianza_Lima.svg.png"
     },
     {
         "Codigo": 3,
         "Nombre": "Sporting Cristal",
         "Breve": "SC",
-        "Descripcion": "Raza Celeste"
+        "Descripcion": "Raza Celeste",
+        "Logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Escudo_de_Sporting_Cristal_%28version_2018%29.svg/1024px-Escudo_de_Sporting_Cristal_%28version_2018%29.svg.png"
     },
     {
         "Codigo": 4,
         "Nombre": "Cienciano",
         "Breve": "C",
-        "Descripcion": "El amor de un Cienciano, es puro como la nieve"
+        "Descripcion": "El amor de un Cienciano, es puro como la nieve",
+        "Logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Escudo_Cienciano.png/800px-Escudo_Cienciano.png"
     }
 ]

@@ -7,5 +7,5 @@ export default abstract class RouterAbstrac {
             prefix: `/${prefix}`,
         });
     }
-    abstract construirRutas(): Router;
+    abstract construirRutas(): Promise<Router>;
 }
