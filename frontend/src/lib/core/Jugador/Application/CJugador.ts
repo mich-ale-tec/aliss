@@ -1,8 +1,8 @@
-import type { TJugador } from '$lib/core/Equipo/Domain/TJugador.js';
+import type { TJugador, TJugadorDashboard } from '$lib/core/Jugador/Domain/TJugador.js';
 import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
 import axios from 'axios';
 
-export default class Jugador {
+export default class CJugador {
     protected readonly Codigo: number;
     protected Equipo: number;
     protected readonly ApellidoPaterno: string;
@@ -28,6 +28,7 @@ export default class Jugador {
     }
     protected validar() {
         this.validarNumero();
+        this.validarEquipo();
         this.validarApellidoPaterno();
         this.validarApellidoMaterno();
         this.validarNombres();
@@ -83,6 +84,11 @@ export default class Jugador {
             throw new ErrorPersonalizado('¡Por favor el campo número de camiseta tiene que ser numérico!');
         }
     }
+    private validarEquipo() {
+        if (!this.Equipo) {
+            throw new ErrorPersonalizado('¡Por favor selccionar el equipo!');
+        }
+    }
     private esNumero(valor: string): boolean {
         const regex = /^\d+$/;
         return regex.test(valor);
@@ -91,7 +97,48 @@ export default class Jugador {
     private convertirNumero(valor: string | number): number {
         return typeof valor === 'number' ? valor : parseInt(valor);
     }
-    static async obtenerJugadores(equipo: string): Promise<Array<TJugador>> {
+    static async obtenerJugador(codigo: string): Promise<TJugador> {
+        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Jugador/obtenerPorCodigo`;
+        const response = await axios.post(url, {
+            Codigo: parseInt(codigo),
+        });
+        const JUGADOR = response.data as TJugador;
+        return {
+            ...JUGADOR,
+            Index: 0,
+            Numero: JUGADOR.Numero || 0,
+            Posicion: JUGADOR.Posicion || '',
+            Edad: JUGADOR.Edad || 18,
+            Nacionalidad: JUGADOR.Nacionalidad || '',
+        };
+    }
+    static async obtenerJugadoresDashboard(): Promise<TJugadorDashboard[]> {
+        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Jugador/obtenerDashboard`;
+        const response = await axios.get(url);
+        const JUGADORES = response.data as Array<TJugadorDashboard>;
+        return JUGADORES.map((e, i) => ({
+            ...e,
+            Numero: e.Numero || 0,
+            Posicion: e.Posicion || '',
+            Edad: e.Edad || 18,
+            Nacionalidad: e.Nacionalidad || '',
+        }));
+    }
+
+    static async obtenerJugadores(): Promise<TJugador[]> {
+        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Jugador/obtener`;
+        const response = await axios.get(url);
+        const JUGADORES = response.data as Array<TJugador>;
+        return JUGADORES.map((e, i) => ({
+            ...e,
+            Index: i,
+            Numero: e.Numero || 0,
+            Posicion: e.Posicion || '',
+            Edad: e.Edad || 18,
+            Nacionalidad: e.Nacionalidad || '',
+        }));
+    }
+    static async obternerJugadorePorEquipo(equipo: string): Promise<Array<TJugador>> {
         const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Jugador/obtenerPorEquipo`;
         const response = await axios.post(url, {
             Equipo: parseInt(equipo),

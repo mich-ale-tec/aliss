@@ -10,7 +10,7 @@
 <div class="pregunta">
     <h3 class="title is-3">{pregunta.nombre}</h3>
     <div class="respuestas">
-        {#each pregunta.respuestas as Respuesta}
+        {#each pregunta.respuestas as Respuesta (Respuesta.id)}
             {@const uniqueId = `P${pregunta.id}_R${Respuesta.id}`}
             <div class="respuesta">
                 <input type="radio" id={uniqueId} value={uniqueId} bind:group={respuesta} />

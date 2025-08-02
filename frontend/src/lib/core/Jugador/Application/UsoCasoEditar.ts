@@ -1,26 +1,25 @@
-import type { TJugador } from '$lib/core/Equipo/Domain/TJugador.js';
+import type { TJugador } from '$lib/core/Jugador/Domain/TJugador.js';
 import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
 import axios from 'axios';
-import type { IModificarJugadores } from '$lib/core/Jugador/Domain/IModificarEquipo.js';
 import { mostrarToast } from '../../../../store/ToastStore.js';
-import Jugador from '$lib/core/Jugador/Application/Jugador.js';
+import CJugador from '$lib/core/Jugador/Application/CJugador.js';
 
-export default class UsoCasoEditar extends Jugador {
+export default class UsoCasoEditar extends CJugador {
     constructor(jugador: TJugador) {
         super(jugador);
     }
-    public async iniciar(propsRunas: IModificarJugadores): Promise<void> {
+    public async iniciar(): Promise<TJugador | void> {
         try {
             this.validar();
             const JUGADOR = await this.editar();
-            propsRunas.modificarJugador(JUGADOR);
             mostrarToast({
                 Mostrar: true,
                 Texto: 'Actualizado',
-                Icono: 'carbon:warning',
+                Icono: 'qlementine-icons:success-12',
                 Tipo: 'success',
             });
-        } catch (error: any) {
+            return JUGADOR;
+        } catch (error: unknown) {
             ErrorPersonalizado.retornarError(error);
         }
     }

@@ -26,7 +26,7 @@
             <div class="content has-text-centered">
                 Administra todos los equipos de la liga,<br /> sus entrenadores y estadísticas
             </div>
-            <button class="button btn_administrar is-link">Administrar Equipos</button>
+            <a href="/admin/equipos" class="button btn_administrar is-link">Administrar Equipos</a>
         </div>
     </div>
     <div class="card card_administrar">
@@ -40,7 +40,7 @@
             <div class="content has-text-centered">
                 Administra todos los jugadores, sus posiciones<br />y rendimiento
             </div>
-            <button class="button btn_administrar is-link">Administrar Jugadores</button>
+            <a href="/admin/jugadores" class="button btn_administrar is-link">Administrar Jugadores</a>
         </div>
     </div>
 </div>
@@ -51,12 +51,11 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        gap: 2rem;
         .card_administrar {
             box-shadow: none;
             border: 1px solid rgb(238, 238, 238);
             border-radius: 1rem;
-            margin-right: 1rem;
-            margin-left: 1rem;
             .btn_administrar {
                 width: 100%;
             }

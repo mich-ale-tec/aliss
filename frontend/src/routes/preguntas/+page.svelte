@@ -40,8 +40,6 @@
             <h3>Cargando...</h3>
         {:then valor}
             <Resultado resultado={valor} />
-        {:catch error}
-            <p>¡No pudimos validar tus respuestas! Lo sentimos</p>
         {/await}
     {:else if Preguntas.length > 0}
         <Progress nroPregunta={NroPregunta} nroPreguntas={Preguntas.length} />

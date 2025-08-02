@@ -8,6 +8,8 @@ import UsoCasoObtenerPorCodigo from '../../../context/Administracion/Equipo/Appl
 import UsoCasoAgregar from '../../../context/Administracion/Equipo/Application/UsoCasoAgregar';
 import UsoCasoObtener from '../../../context/Administracion/Equipo/Application/UsoCasoObtener';
 import ValidatorAJV from '../../../context/Administracion/Equipo/Infraestructure/Validator';
+import { TEquipoDashboard } from '../../../context/Administracion/Equipo/Domain/TResponse';
+import UsoCasoObtenerDashboard from '../../../context/Administracion/Equipo/Application/UsoCasoObtenerDashboard';
 
 export default class Router extends RouterAbstrac {
     private validatorAJV: ValidatorAJV;
@@ -18,10 +20,19 @@ export default class Router extends RouterAbstrac {
     public async construirRutas() {
         await this.bootstrap.exec();
         this.router.get('/obtener', this.obtener.bind(this));
+        this.router.get('/obtenerDashboard', this.obtenerDashboard.bind(this));
         this.router.post('/obtenerPorCodigo', this.obtenerPorCodigo.bind(this));
         this.router.post('/agregar', this.agregar.bind(this));
         this.router.patch('/editar', this.editar.bind(this));
         return this.router;
+    }
+    private async obtenerDashboard(ctx: ParameterizedContext) {
+        try {
+            const EQUIPOS: TEquipoDashboard[] = await new UsoCasoObtenerDashboard(ctx).init();
+            ctx.body = JSON.stringify(EQUIPOS);
+        } catch (error) {
+            this.lanzarError(error, ctx);
+        }
     }
     private async obtener(ctx: ParameterizedContext) {
         try {

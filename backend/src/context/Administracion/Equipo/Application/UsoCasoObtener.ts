@@ -1,33 +1,23 @@
-import { TEquipo } from '../Domain/TEquipo';
 import { RepositoryMain } from '../Domain/RepositoryMain';
 import { RepositoryImplMain } from '../Infraestructure/RepositoryImplMain';
-import { MongoClient } from 'mongodb';
-import UsoCaso from '../../../shared/Infraestructure/UsoCaso';
 import { ParameterizedContext } from 'koa';
+import UsoCaso from '../../../shared/Infraestructure/UsoCaso';
+import { TOptions } from '../../../shared/Domain/RepositoryGenerico';
+import { TEquipo } from '../Domain/TEquipo';
 
 export default class UsoCasoObtener extends UsoCaso {
-    private readonly repoMain: RepositoryMain;
+    private readonly repo: RepositoryMain;
     constructor(ctx: ParameterizedContext) {
         super(ctx);
-        this.repoMain = new RepositoryImplMain(this.lanzarError);
+        this.repo = new RepositoryImplMain(this.lanzarError);
     }
     async init(): Promise<Array<TEquipo>> {
-        const client = await this.repoMain.connection();
+        const client = await this.repo.connection();
         try {
-            return await this._init(client);
+            const opciones: TOptions = { Client: client };
+            return await this.repo.obtener(opciones);
         } finally {
-            await this.repoMain.closeConnection(client);
-        }
-    }
-    async _init(client: MongoClient): Promise<Array<TEquipo>> {
-        const session = await this.repoMain.session(client);
-        try {
-            return this.repoMain.obtener({ Client: client });
-        } catch (error) {
-            await this.repoMain.rollbackTransaction(session);
-            throw error;
-        } finally {
-            await this.repoMain.closeSession(session);
+            await this.repo.closeConnection(client);
         }
     }
 }
