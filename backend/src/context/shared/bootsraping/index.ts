@@ -1,5 +1,6 @@
 import { EntityObjectDatabase } from '../Domain/EntityObjectDatabase';
 import { BootstrapingDatabaseMongo } from './database/mongodb';
+import { EntityIndex } from '../Domain/EntityIndex';
 
 export class Bootstraping {
     public databaseBootstrap: BootstrapingDatabaseMongo;
@@ -8,11 +9,11 @@ export class Bootstraping {
         uri: string,
         database: string,
         objects: Array<EntityObjectDatabase>,
-        indexes: any,
+        indexes: Array<EntityIndex>,
     ) {
         switch (motor.toLowerCase()) {
             case 'mongo':
-            case 'mongodb':
+            case 'mongodb': {
                 const directConnection = process.env.MONGO_DIRECTCONECTION === 'true';
                 this.databaseBootstrap = new BootstrapingDatabaseMongo(
                     uri,
@@ -22,6 +23,7 @@ export class Bootstraping {
                     directConnection,
                 );
                 break;
+            }
             default:
                 throw new Error('No support motor database');
                 break;

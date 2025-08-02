@@ -3,18 +3,19 @@ import { TRequestPorEquipo } from '../Domain/TRequest';
 import { RepositoryMain } from '../Domain/RepositoryMain';
 import { MongoClient } from 'mongodb';
 import { RepositoryImplMain } from '../Infraestructure/RepositoryImplMain';
+import UsoCaso from '../../../shared/Infraestructure/UsoCaso';
+import { ParameterizedContext } from 'koa';
 
-export default class UsoCasoObtenerPorEquipo {
+export default class UsoCasoObtenerPorEquipo extends UsoCaso {
     private readonly repoMain: RepositoryMain;
-    constructor() {
-        this.repoMain = new RepositoryImplMain();
+    constructor(ctx: ParameterizedContext) {
+        super(ctx);
+        this.repoMain = new RepositoryImplMain(this.lanzarError);
     }
     async init(body: TRequestPorEquipo): Promise<Array<TJugador>> {
         const client = await this.repoMain.connection();
         try {
             return await this._init(client, body);
-        } catch (error) {
-            throw error;
         } finally {
             await this.repoMain.closeConnection(client);
         }

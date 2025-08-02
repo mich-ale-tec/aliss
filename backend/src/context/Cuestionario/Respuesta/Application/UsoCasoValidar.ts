@@ -6,40 +6,39 @@ import { RepositoryMain as RMJugador } from '../../../Administracion/Jugador/Dom
 import { RepositoryMain as RMEquipo } from '../../../Administracion/Equipo/Domain/RepositoryMain';
 import { RepositoryImplMain as RMImplJugador } from '../../../Administracion/Jugador/Infraestructure/RepositoryImplMain';
 import { RepositoryImplMain as RMImplEquipo } from '../../../Administracion/Equipo/Infraestructure/RepositoryImplMain';
+import UsoCaso from '../../../shared/Infraestructure/UsoCaso';
+import { ParameterizedContext } from 'koa';
 
-export default class UsoCasoValidar {
+export default class UsoCasoValidar extends UsoCaso {
     private readonly repoJugador: RMJugador;
     private readonly repoEquipo: RMEquipo;
-    constructor() {
-        this.repoJugador = new RMImplJugador();
-        this.repoEquipo = new RMImplEquipo();
+    constructor(ctx: ParameterizedContext) {
+        super(ctx);
+        this.repoJugador = new RMImplJugador(this.lanzarError);
+        this.repoEquipo = new RMImplEquipo(this.lanzarError);
     }
     public async init(body: TRequestRespuestas): Promise<TResponseRespuestas> {
-        try {
-            let correctas = 0;
-            let incorrectas = 0;
+        let correctas = 0;
+        let incorrectas = 0;
 
-            const EQUIPOS = await this.obtenerEquipos();
-            const JUGADORES = await this.obtenerJugadores();
-            const PREGUNTAS_RESPUESTAS = this.obtenerRespuestasPorPregunta(body.Respuestas);
-            for (const PREGUNTA_RESPUESTA of PREGUNTAS_RESPUESTAS) {
-                const CODIGO_PREGUNTA = this.obtenerCodigoPregunta(PREGUNTA_RESPUESTA);
-                const COD_RESPUESTA = this.obtenerCodigoRespuesta(PREGUNTA_RESPUESTA);
-                const EQUIPO = this.obtenerEquipo(EQUIPOS, CODIGO_PREGUNTA);
-                const ES_CORRECTA = this.esRespuestaCorrecta(JUGADORES, EQUIPO, COD_RESPUESTA);
-                if (ES_CORRECTA) {
-                    correctas++;
-                } else {
-                    incorrectas++;
-                }
+        const EQUIPOS = await this.obtenerEquipos();
+        const JUGADORES = await this.obtenerJugadores();
+        const PREGUNTAS_RESPUESTAS = this.obtenerRespuestasPorPregunta(body.Respuestas);
+        for (const PREGUNTA_RESPUESTA of PREGUNTAS_RESPUESTAS) {
+            const CODIGO_PREGUNTA = this.obtenerCodigoPregunta(PREGUNTA_RESPUESTA);
+            const COD_RESPUESTA = this.obtenerCodigoRespuesta(PREGUNTA_RESPUESTA);
+            const EQUIPO = this.obtenerEquipo(EQUIPOS, CODIGO_PREGUNTA);
+            const ES_CORRECTA = this.esRespuestaCorrecta(JUGADORES, EQUIPO, COD_RESPUESTA);
+            if (ES_CORRECTA) {
+                correctas++;
+            } else {
+                incorrectas++;
             }
-            return {
-                Correctas: correctas,
-                Incorrectas: incorrectas,
-            };
-        } catch (error) {
-            throw error;
         }
+        return {
+            Correctas: correctas,
+            Incorrectas: incorrectas,
+        };
     }
     private obtenerRespuestasPorPregunta(respuestas: string): Array<string> {
         return respuestas.split(':');
@@ -68,8 +67,6 @@ export default class UsoCasoValidar {
         const client = await this.repoEquipo.connection();
         try {
             return await this.repoEquipo.obtener({ Client: client });
-        } catch (error) {
-            throw error;
         } finally {
             await this.repoEquipo.closeConnection(client);
         }
@@ -78,8 +75,6 @@ export default class UsoCasoValidar {
         const client = await this.repoJugador.connection();
         try {
             return await this.repoJugador.obtener({ Client: client });
-        } catch (error) {
-            throw error;
         } finally {
             await this.repoJugador.closeConnection(client);
         }

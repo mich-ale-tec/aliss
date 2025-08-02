@@ -1,5 +1,6 @@
 import { EntityIndex } from '../../../shared/Domain/EntityIndex';
 import { EntityObjectDatabase } from '../../../shared/Domain/EntityObjectDatabase';
+import { EntityAdapterConfigure } from '../../../shared/Domain/EntityAdapterConfigure';
 
 const URI: string = process.env.URI_ADMINISTRACION_JUGADOR ?? '';
 const DATABASE: string = process.env.DATABASE_ADMINISTRACION_JUGADOR ?? '';
@@ -26,7 +27,7 @@ const DATABASE_INDEXES: Array<EntityIndex> = [
     },
 ];
 
-export const AdapterConfigure = {
+export const AdapterConfigure: EntityAdapterConfigure = {
     TIMEZONE,
     URI,
     DATABASE,

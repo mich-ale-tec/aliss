@@ -21,3 +21,6 @@ export type TRequestAgregar = {
     Edad: number;
     Nacionalidad: string;
 };
+export type TRequestPorCodigo = {
+    Codigo: number;
+};

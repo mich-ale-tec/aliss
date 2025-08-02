@@ -6,32 +6,31 @@ import { RepositoryImplMain as RMImplJugador } from '../../../Administracion/Jug
 import { RepositoryImplMain as RMImplEquipo } from '../../../Administracion/Equipo/Infraestructure/RepositoryImplMain';
 import { RepositoryMain as RMJugador } from '../../../Administracion/Jugador/Domain/RepositoryMain';
 import { RepositoryMain as RMEquipo } from '../../../Administracion/Equipo/Domain/RepositoryMain';
+import { ParameterizedContext } from 'koa';
+import UsoCaso from '../../../shared/Infraestructure/UsoCaso';
 
-export default class UsoCasoObtenerPreguntas {
+export default class UsoCasoObtenerPreguntas extends UsoCaso {
     private readonly repoJugador: RMJugador;
     private readonly repoEquipo: RMEquipo;
-    constructor() {
-        this.repoJugador = new RMImplJugador();
-        this.repoEquipo = new RMImplEquipo();
+    constructor(ctx: ParameterizedContext) {
+        super(ctx);
+        this.repoJugador = new RMImplJugador(this.lanzarError);
+        this.repoEquipo = new RMImplEquipo(this.lanzarError);
     }
     public async iniciar(): Promise<Array<EntityMain>> {
-        try {
-            const PREGUNTAS: Array<EntityMain> = [];
-            const JUGADORES = await this.obtenerJugadores();
-            const EQUIPOS = await this.obtenerEquipos();
-            const INDICES_EQUIPOS_ALEATORIOS = this.generarNumerosAzar(4, 0, 3);
-            for (const INDICE_EQUIPO_ALEATORIO of INDICES_EQUIPOS_ALEATORIOS) {
-                const EQUIPO = EQUIPOS[INDICE_EQUIPO_ALEATORIO];
-                const PREGUNTA = this.obtenerPregunta(EQUIPO);
-                const JUGADOR_EQUIPO = this.obtenerJugadorDelEquipo(JUGADORES, EQUIPO);
-                const JUGADORES_INCORRECTOS = this.obtenerJugadoresIncorrecto(JUGADORES, EQUIPO);
-                this.generarRespuestas(JUGADOR_EQUIPO, JUGADORES_INCORRECTOS, PREGUNTA);
-                PREGUNTAS.push(PREGUNTA);
-            }
-            return PREGUNTAS;
-        } catch (error) {
-            throw error;
+        const PREGUNTAS: Array<EntityMain> = [];
+        const JUGADORES = await this.obtenerJugadores();
+        const EQUIPOS = await this.obtenerEquipos();
+        const INDICES_EQUIPOS_ALEATORIOS = this.generarNumerosAzar(4, 0, 3);
+        for (const INDICE_EQUIPO_ALEATORIO of INDICES_EQUIPOS_ALEATORIOS) {
+            const EQUIPO = EQUIPOS[INDICE_EQUIPO_ALEATORIO];
+            const PREGUNTA = this.obtenerPregunta(EQUIPO);
+            const JUGADOR_EQUIPO = this.obtenerJugadorDelEquipo(JUGADORES, EQUIPO);
+            const JUGADORES_INCORRECTOS = this.obtenerJugadoresIncorrecto(JUGADORES, EQUIPO);
+            this.generarRespuestas(JUGADOR_EQUIPO, JUGADORES_INCORRECTOS, PREGUNTA);
+            PREGUNTAS.push(PREGUNTA);
         }
+        return PREGUNTAS;
     }
     private generarRespuestas(jugador: TJugador, jugadoresInco: TJugador[], pregunta: EntityMain) {
         pregunta.respuestas.push({
@@ -84,8 +83,6 @@ export default class UsoCasoObtenerPreguntas {
         const client = await this.repoEquipo.connection();
         try {
             return await this.repoEquipo.obtener({ Client: client });
-        } catch (error) {
-            throw error;
         } finally {
             await this.repoEquipo.closeConnection(client);
         }
@@ -94,8 +91,6 @@ export default class UsoCasoObtenerPreguntas {
         const client = await this.repoJugador.connection();
         try {
             return await this.repoJugador.obtener({ Client: client });
-        } catch (error) {
-            throw error;
         } finally {
             await this.repoJugador.closeConnection(client);
         }

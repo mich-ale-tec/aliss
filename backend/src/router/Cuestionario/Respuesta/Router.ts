@@ -13,12 +13,10 @@ export default class Router extends RouterAbstrac {
     private async validar(ctx: ParameterizedContext) {
         try {
             const body = ctx.request.body;
-            const resultado = await new UsoCasoValidar().init(body);
+            const resultado = await new UsoCasoValidar(ctx).init(body);
             ctx.body = JSON.stringify(resultado);
         } catch (error) {
-            console.log(error);
-            ctx.body = `Hubo un error ${error}`;
-            ctx.status = 406;
+            this.lanzarError(error, ctx);
         }
     }
 }

@@ -1,5 +1,6 @@
 import type { TJugador } from '$lib/core/Equipo/Domain/TJugador.js';
 import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
+import axios from 'axios';
 
 export default class Jugador {
     protected readonly Codigo: number;
@@ -89,5 +90,25 @@ export default class Jugador {
 
     private convertirNumero(valor: string | number): number {
         return typeof valor === 'number' ? valor : parseInt(valor);
+    }
+    static async obtenerJugadores(equipo: string): Promise<Array<TJugador>> {
+        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Jugador/obtenerPorEquipo`;
+        const response = await axios.post(url, {
+            Equipo: parseInt(equipo),
+        });
+        const JUGADORES = response.data as Array<TJugador>;
+        return JUGADORES.map((e, i) => ({
+            Index: i,
+            Codigo: e.Codigo,
+            Equipo: e.Equipo,
+            ApellidoPaterno: e.ApellidoPaterno,
+            ApellidoMaterno: e.ApellidoMaterno,
+            Nombres: e.Nombres,
+            // Agregar
+            Numero: e.Numero || 0,
+            Posicion: e.Posicion || '',
+            Edad: e.Edad || 18,
+            Nacionalidad: e.Nacionalidad || '',
+        }));
     }
 }

@@ -6,10 +6,13 @@ import { pipeline } from '../../../shared/Domain/EntityUpdate';
 import { TOptions } from '../../../shared/Domain/RepositoryGenerico';
 import { TRequestAgregar, TRequestEditar } from '../Domain/TRequest';
 import { UpdateFilter, Filter } from 'mongodb';
+import ErrorPersonalizado from '../../../shared/Infraestructure/ErrorPersonalizado';
 
 export class RepositoryImplMain extends RepoImplMongoGene<TJugador> implements RepositoryMain {
-    constructor() {
+    private lanzarError: ErrorPersonalizado;
+    constructor(lanzarError: ErrorPersonalizado) {
         super(AC.URI, AC.DATABASE, AC.SCHEMA, AC.ENTITY);
+        this.lanzarError = lanzarError;
     }
     async obtener(opciones: TOptions): Promise<TJugador[]> {
         const pipe: Array<pipeline> = [{ $match: {} }];
@@ -23,11 +26,10 @@ export class RepositoryImplMain extends RepoImplMongoGene<TJugador> implements R
         const pipe: Array<pipeline> = [{ $match: { Codigo: codigo } }];
         const JUGADORES = await this.find(opcion.Client, pipe);
         const [JUGADOR] = JUGADORES;
-        if (!JUGADOR) throw new Error('¡No se encontró el jugador!');
+        if (!JUGADOR) this.lanzarError.negocio('¡No se encontró el jugador!');
         return JUGADOR;
     }
-    async editar(body: TRequestEditar, opciones: TOptions): Promise<void> {
-        if (!opciones.Session) throw new Error('¡No existe sessión!');
+    async editar(body: TRequestEditar, opciones: Required<TOptions>): Promise<void> {
         const FILTER: Filter<TJugador> = { Codigo: body.Codigo };
         const UPDATE: UpdateFilter<TJugador> = {
             $set: {
@@ -42,8 +44,7 @@ export class RepositoryImplMain extends RepoImplMongoGene<TJugador> implements R
         };
         await this.updateOne(opciones.Client, opciones.Session, FILTER, UPDATE);
     }
-    async agregar(body: TRequestAgregar, opciones: TOptions): Promise<TJugador> {
-        if (!opciones.Session) throw new Error('¡No se tiene una sesión!');
+    async agregar(body: TRequestAgregar, opciones: Required<TOptions>): Promise<TJugador> {
         const CODIGO = await this.obtenerCodigo(opciones);
         const JUGADOR: TJugador = {
             Codigo: CODIGO,

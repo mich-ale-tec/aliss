@@ -36,10 +36,6 @@ function init() {
         });
     });
 }
-init()
-    .then(e => {
-    console.log('Servidor Listo');
-})
-    .catch(e => {
+init().catch(e => {
     console.error(e);
 });

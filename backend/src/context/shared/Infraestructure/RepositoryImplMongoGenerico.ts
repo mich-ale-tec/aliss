@@ -48,23 +48,15 @@ export abstract class RepositoryImplMongoGenerico<T extends Document>
         await AdapterMongoDB.closeConnection(client);
     }
     public async find(cli: MC, pipe: pipeline[]): Promise<Array<T>> {
-        try {
-            const OPTIONS: AggregateOptions = {};
-            const col = cli.db(this.database).collection<T>(`${this.schema}_${this.entity}`);
-            for (let row of pipe) {
-                AdapterMongoDB.validateDocument(row);
-            }
-            return await col.aggregate<T>(pipe, OPTIONS).toArray();
-        } catch (error) {
-            throw error;
+        const OPTIONS: AggregateOptions = {};
+        const col = cli.db(this.database).collection<T>(`${this.schema}_${this.entity}`);
+        for (const row of pipe) {
+            AdapterMongoDB.validateDocument(row);
         }
+        return await col.aggregate<T>(pipe, OPTIONS).toArray();
     }
     public async saveOne(client: MC, session: CS, obj: T): Promise<void> {
-        try {
-            return await this._saveOne(client, session, obj);
-        } catch (error) {
-            throw error;
-        }
+        return await this._saveOne(client, session, obj);
     }
     private async _saveOne(client: MC, session: CS, obj: T): Promise<void> {
         try {
@@ -75,115 +67,90 @@ export abstract class RepositoryImplMongoGenerico<T extends Document>
                 throw Error('No se guardaron los datos correctamente');
             }
         } catch (error) {
-            error = AdapterMongoDB.decodeError(error);
-            throw error;
+            AdapterMongoDB.decodeError(error);
         }
     }
     public async saveMany(client: MC, session: CS, obj: T[]): Promise<void> {
-        try {
-            await this._saveMany(client, session, obj);
-        } catch (error) {
-            throw error;
-        }
+        await this._saveMany(client, session, obj);
     }
     private async _saveMany(client: MC, sess: CS, obj: T[]): Promise<void> {
         try {
-            for (let row of obj) {
+            for (const row of obj) {
                 AdapterMongoDB.validateDocument(row);
             }
-            let col = client.db(this.database).collection<T>(`${this.schema}_${this.entity}`);
+            const col = client.db(this.database).collection<T>(`${this.schema}_${this.entity}`);
             const OPTIONS = {
                 session: sess,
             };
-            let response = await col.insertMany(obj as OptionalUnlessRequiredId<T>[], OPTIONS);
+            const response = await col.insertMany(obj as OptionalUnlessRequiredId<T>[], OPTIONS);
             if (!response.acknowledged) {
                 throw Error('No se guardaron los datos correctamente');
             }
         } catch (error) {
-            error = AdapterMongoDB.decodeError(error);
-            throw error;
+            AdapterMongoDB.decodeError(error);
         }
     }
     public async updateOne(cli: MC, ses: CS, fil: Filter<T>, up: UF<T>): Promise<void> {
-        try {
-            await this._updateOne(cli, ses, fil, up);
-        } catch (error) {
-            throw error;
-        }
+        await this._updateOne(cli, ses, fil, up);
     }
     private async _updateOne(cli: MC, sess: CS, fil: Filter<T>, upd: UF<T>): Promise<void> {
         try {
             AdapterMongoDB.validateDocument(fil);
             AdapterMongoDB.validateDocument(upd);
-            let col = cli.db(this.database).collection<T>(`${this.schema}_${this.entity}`);
-            let updateResult = await col.updateOne(fil, upd, { session: sess });
+            const col = cli.db(this.database).collection<T>(`${this.schema}_${this.entity}`);
+            const updateResult = await col.updateOne(fil, upd, { session: sess });
             if (!updateResult.acknowledged) {
                 throw Error('No se actualizaron los datos correctamente');
             }
         } catch (error) {
-            error = AdapterMongoDB.decodeError(error);
-            throw error;
+            AdapterMongoDB.decodeError(error);
         }
     }
     public async updateMany(cli: MC, ses: CS, fil: Filter<T>, upd: UF<T>): Promise<void> {
-        try {
-            await this._updateMany(cli, ses, fil, upd);
-        } catch (error) {
-            throw error;
-        }
+        await this._updateMany(cli, ses, fil, upd);
     }
     private async _updateMany(cli: MC, session: CS, fil: Filter<T>, upd: UF<T>): Promise<void> {
         try {
             AdapterMongoDB.validateDocument(fil);
             AdapterMongoDB.validateDocument(upd);
-            let col = cli.db(this.database).collection<T>(`${this.schema}_${this.entity}`);
-            let updateResult: any = await col.updateMany(fil, upd, { session: session });
+            const col = cli.db(this.database).collection<T>(`${this.schema}_${this.entity}`);
+            const updateResult = await col.updateMany(fil, upd, { session: session });
             if (!updateResult.acknowledged) {
                 throw Error('No se actualizaron los datos correctamente');
             }
         } catch (error) {
-            error = AdapterMongoDB.decodeError(error);
-            throw error;
+            AdapterMongoDB.decodeError(error);
         }
     }
     public async deleteOne(client: MC, session: CS, filter: Filter<T>): Promise<void> {
-        try {
-            await this._deleteOne(client, session, filter);
-        } catch (error) {
-            throw error;
-        }
+        await this._deleteOne(client, session, filter);
     }
     private async _deleteOne(client: MC, session: CS, filter: Filter<T>): Promise<void> {
         try {
             AdapterMongoDB.validateDocument(filter);
-            let col = client.db(this.database).collection<T>(`${this.schema}_${this.entity}`);
-            let deleteResult = await col.deleteOne(filter, { session });
+            const col = client.db(this.database).collection<T>(`${this.schema}_${this.entity}`);
+            const deleteResult = await col.deleteOne(filter, { session });
             if (!deleteResult.acknowledged) {
                 throw Error('No se eliminaron los datos correctamente');
             }
         } catch (error) {
-            error = AdapterMongoDB.decodeError(error);
+            AdapterMongoDB.decodeError(error);
             throw error;
         }
     }
     public async deleteMany(client: MC, session: CS, filter: Filter<T>): Promise<void> {
-        try {
-            await this._deleteMany(client, session, filter);
-        } catch (error) {
-            throw error;
-        }
+        await this._deleteMany(client, session, filter);
     }
     private async _deleteMany(client: MC, session: CS, filter: Filter<T>): Promise<void> {
         try {
             AdapterMongoDB.validateDocument(filter);
-            let col = client.db(this.database).collection<T>(`${this.schema}_${this.entity}`);
-            let deleteResult = await col.deleteMany(filter, { session });
+            const col = client.db(this.database).collection<T>(`${this.schema}_${this.entity}`);
+            const deleteResult = await col.deleteMany(filter, { session });
             if (!deleteResult.acknowledged) {
                 throw Error('No se eliminaron los datos correctamente');
             }
         } catch (error) {
-            error = AdapterMongoDB.decodeError(error);
-            throw error;
+            AdapterMongoDB.decodeError(error);
         }
     }
 }

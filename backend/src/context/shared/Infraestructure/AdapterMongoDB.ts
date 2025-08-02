@@ -1,14 +1,15 @@
 import { ClientSession, MongoClient, ObjectId, ReadConcern, ReadPreference } from 'mongodb';
 
 export class AdapterMongoDB {
-    public static async connection(
-        uri: string,
-        directConnection: boolean = true,
-    ): Promise<MongoClient> {
+    public static async connection(uri: string, directConnection: boolean): Promise<MongoClient> {
         try {
-            return await MongoClient.connect(uri, { directConnection });
+            return await MongoClient.connect(uri, { directConnection: directConnection || true });
         } catch (error) {
-            throw Error('No es posible establecer conexión con la base de datos');
+            let message = '';
+            if (error instanceof Error) {
+                message = error.message;
+            }
+            throw Error(`No es posible establecer conexión con la base de datos ${message}`);
         }
     }
     public static async closeConnection(client: MongoClient): Promise<void> {
@@ -48,17 +49,18 @@ export class AdapterMongoDB {
         }
         await session.abortTransaction();
     }
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     public static validateDocument(obj: any): any {
         const checkForValidMongoDbID = new RegExp('^[0-9a-fA-F]{24}$');
 
         const isIsoDate = (str: string) => {
             if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(str)) return false;
-            const d: any = new Date(str);
-            return d instanceof Date && d.toISOString() === str; // valid date
+            const d = new Date(str);
+            return d.toISOString() === str; // valid date
         };
 
-        for (let key of Object.keys(obj)) {
-            if (obj[key] !== null) {
+        for (const key of Object.keys(obj)) {
+            if (obj[key]) {
                 if (key.includes('_id')) {
                     if (typeof obj[key] === 'string') {
                         obj[key] = checkForValidMongoDbID.test(obj[key])
@@ -74,10 +76,9 @@ export class AdapterMongoDB {
                 }
                 if (typeof obj[key] === 'object') {
                     if (Array.isArray(obj[key])) {
-                        for (let row of obj[key]) {
+                        for (const row of obj[key]) {
                             AdapterMongoDB.validateDocument(row);
                         }
-                    } else if (obj[key] instanceof Date) {
                     } else {
                         AdapterMongoDB.validateDocument(obj[key]);
                     }
@@ -96,18 +97,20 @@ export class AdapterMongoDB {
         }
         return obj;
     }
-    public static decodeError(error: any) {
-        if (!!error?.code) {
-            switch (error.code) {
-                case 11000:
-                    error = new Error(
-                        `existe duplicidad de datos, favor de verificar la información`,
-                    );
-                    break;
-                default:
-                    break;
+    /* eslint-enable @typescript-eslint/no-explicit-any */
+    public static decodeError(error: unknown) {
+        if (error && typeof error === 'object') {
+            if ('code' in error) {
+                switch (error.code) {
+                    case 11000:
+                        throw new Error(
+                            'existe duplicidad de datos, favor de verificar la información',
+                        );
+                        break;
+                    default:
+                        break;
+                }
             }
         }
-        return error;
     }
 }

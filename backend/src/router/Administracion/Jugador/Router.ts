@@ -1,66 +1,76 @@
 import RouterAbstrac from '../../RouterAbstrac';
+import ValidatorAJV from '../../../context/Administracion/Jugador/Infraestructure/Validator';
 import { ParameterizedContext } from 'koa';
-import UsoCasoObtenerPorEquipo from '../../../context/Administracion/Jugador/Application/UsoCasoObtenerPorEquipo';
-import { Bootstraping } from '../../../context/shared/bootsraping';
 import { AdapterConfigure } from '../../../context/Administracion/Jugador/Infraestructure/AdapterConfigure';
-import { EntityObjectDatabase } from '../../../context/shared/Domain/EntityObjectDatabase';
-import { EntityIndex } from '../../../context/shared/Domain/EntityIndex';
-import UsoCasoEditar from '../../../context/Administracion/Jugador/Application/UsoCasoEditar';
 import { TJugador } from '../../../context/Administracion/Jugador/Domain/TJugador';
+// Uso Casos
+import UsoCasoObtenerPorEquipo from '../../../context/Administracion/Jugador/Application/UsoCasoObtenerPorEquipo';
+import UsoCasoEditar from '../../../context/Administracion/Jugador/Application/UsoCasoEditar';
 import UsoCasoAgregar from '../../../context/Administracion/Jugador/Application/UsoCasoAgregar';
+import UsoCasoObtener from '../../../context/Administracion/Jugador/Application/UsoCasoObtener';
+import UsoCasoObtenerPorCodigo from '../../../context/Administracion/Jugador/Application/UsoCasoObtenerPorCodigo';
 
 export default class Router extends RouterAbstrac {
-    private readonly URI: string;
-    private readonly DB: string;
-    private readonly OBJECTS: EntityObjectDatabase[];
-    private readonly INDEXES: EntityIndex[];
-    private bootstrap: Bootstraping;
+    private validatorAJV: ValidatorAJV;
     constructor(prefix: string) {
-        super(prefix);
-        this.URI = AdapterConfigure.URI;
-        this.DB = AdapterConfigure.DATABASE;
-        this.OBJECTS = AdapterConfigure.DATABASE_OBJECTS;
-        this.INDEXES = AdapterConfigure.DATABASE_INDEXES;
-        this.bootstrap = new Bootstraping('mongodb', this.URI, this.DB, this.OBJECTS, this.INDEXES);
+        super(prefix, AdapterConfigure);
+        this.validatorAJV = new ValidatorAJV();
     }
     public async construirRutas() {
         await this.bootstrap.exec();
+        this.router.get('/obtener', this.obtener.bind(this));
         this.router.post('/obtenerPorEquipo', this.obtenerPorEquipo.bind(this));
+        this.router.post('/obtenerPorCodigo', this.obtenerPorCodigo.bind(this));
         this.router.patch('/editar', this.editar.bind(this));
         this.router.post('/agregar', this.agregar.bind(this));
         return this.router;
     }
+    public async obtenerPorCodigo(ctx: ParameterizedContext) {
+        try {
+            const body = ctx.request.body;
+            this.validatorAJV.obtenerPorCodigo(body, ctx);
+            const JUGADOR: TJugador = await new UsoCasoObtenerPorCodigo(ctx).init(body);
+            ctx.body = JSON.stringify(JUGADOR);
+        } catch (error) {
+            this.lanzarError(error, ctx);
+        }
+    }
+    public async obtener(ctx: ParameterizedContext) {
+        try {
+            const JUGADORES: TJugador[] = await new UsoCasoObtener(ctx).init();
+            ctx.body = JSON.stringify(JUGADORES);
+        } catch (error) {
+            this.lanzarError(error, ctx);
+        }
+    }
     public async agregar(ctx: ParameterizedContext) {
         try {
             const body = ctx.request.body;
-            const JUGADOR: TJugador = await new UsoCasoAgregar().init(body);
+            this.validatorAJV.agregar(body, ctx);
+            const JUGADOR: TJugador = await new UsoCasoAgregar(ctx).init(body);
             ctx.body = JSON.stringify(JUGADOR);
         } catch (error) {
-            console.log(error);
-            ctx.body = `Hubo un error ${error}`;
-            ctx.status = 406;
+            this.lanzarError(error, ctx);
         }
     }
     public async editar(ctx: ParameterizedContext) {
         try {
             const body = ctx.request.body;
-            const JUGADOR: TJugador = await new UsoCasoEditar().init(body);
+            this.validatorAJV.editar(body, ctx);
+            const JUGADOR: TJugador = await new UsoCasoEditar(ctx).init(body);
             ctx.body = JSON.stringify(JUGADOR);
         } catch (error) {
-            console.log(error);
-            ctx.body = `Hubo un error ${error}`;
-            ctx.status = 406;
+            this.lanzarError(error, ctx);
         }
     }
     public async obtenerPorEquipo(ctx: ParameterizedContext) {
         try {
             const body = ctx.request.body;
-            const JUGADORES = await new UsoCasoObtenerPorEquipo().init(body);
+            this.validatorAJV.obtenerPorEquipo(body, ctx);
+            const JUGADORES: TJugador[] = await new UsoCasoObtenerPorEquipo(ctx).init(body);
             ctx.body = JSON.stringify(JUGADORES);
         } catch (error) {
-            console.log(error);
-            ctx.body = `Hubo un error ${error}`;
-            ctx.status = 406;
+            this.lanzarError(error, ctx);
         }
     }
 }

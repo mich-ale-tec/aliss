@@ -8,7 +8,7 @@
         "build": "rm -rf build && npx mkdirp build/src && tsc --project ./",
         "b": "rm -rf build && npx mkdirp build/src && tsc --project ./ --watch",
         "start": "nodemon index.ts",
-        "format": "prettier --write \"src/**/*.{ts,js,json,md}\""
+        "lint": "eslint src --ext .js,.ts"
     },
     "keywords": [
         "futbol",
@@ -36,6 +36,7 @@
     "dependencies": {
         "@koa/cors": "^5.0.0",
         "@koa/router": "^13.1.1",
+        "ajv": "^8.17.1",
         "dotenv": "^17.2.0",
         "helmet": "^8.1.0",
         "koa": "^3.0.0",

@@ -7,5 +7,5 @@ export interface EntityIndex {
         name: string;
         direction: number;
     }>;
-    options: any;
+    options: { unique: boolean };
 }

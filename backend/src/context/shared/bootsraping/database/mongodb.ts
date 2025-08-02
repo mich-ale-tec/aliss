@@ -1,4 +1,4 @@
-import { CreateIndexesOptions, MongoClient } from 'mongodb';
+import { MongoClient } from 'mongodb';
 import { AdapterMongoDB } from '../../Infraestructure/AdapterMongoDB';
 import { EntityIndex } from '../../Domain/EntityIndex';
 import { EntityObjectDatabase } from '../../Domain/EntityObjectDatabase';
@@ -24,32 +24,32 @@ export class BootstrapingDatabaseMongo {
         this.directConection = _directConection;
     }
     public async exec(): Promise<void> {
-        if (!!this.objects.length) {
-            for (let row of this.objects) {
+        if (this.objects.length) {
+            for (const row of this.objects) {
                 await this.createCollection(row.schema, row.entity);
             }
         }
-        if (!!this.indexes.length) {
+        if (this.indexes.length) {
             await this.createIndexes();
         }
     }
     private async createCollection(schema: string, entity: string): Promise<void> {
-        let client: MongoClient = await AdapterMongoDB.connection(this.uri, this.directConection);
-        let db = client.db(this.database);
-        let collections = await db.listCollections().toArray();
+        const client: MongoClient = await AdapterMongoDB.connection(this.uri, this.directConection);
+        const db = client.db(this.database);
+        const collections = await db.listCollections().toArray();
         if (collections.findIndex(col => col.name === `${schema}_${entity}`) === -1) {
             await db.createCollection(`${schema}_${entity}`);
         }
         await client.close();
     }
     private async createIndexes(): Promise<void> {
-        let client: MongoClient = await AdapterMongoDB.connection(this.uri, this.directConection);
+        const client: MongoClient = await AdapterMongoDB.connection(this.uri, this.directConection);
         try {
-            for (let row of this.indexes) {
-                let db = client.db(this.database);
-                let col = db.collection(`${row.schema}_${row.entity}`);
+            for (const row of this.indexes) {
+                const db = client.db(this.database);
+                const col = db.collection(`${row.schema}_${row.entity}`);
 
-                let indexesExists = await col.listIndexes().toArray();
+                const indexesExists = await col.listIndexes().toArray();
                 if (!indexesExists.find(idx => idx.name === row.name)) {
                     await col.createIndex(
                         row.fields.reduce((obj, subrow) => {
@@ -60,8 +60,6 @@ export class BootstrapingDatabaseMongo {
                     );
                 }
             }
-        } catch (error) {
-            throw error;
         } finally {
             await client.close();
         }

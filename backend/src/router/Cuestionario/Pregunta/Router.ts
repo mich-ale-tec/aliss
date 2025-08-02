@@ -12,12 +12,10 @@ export default class Router extends RouterAbstrac {
     }
     private async obtener(ctx: ParameterizedContext) {
         try {
-            const preguntas = await new UsoCasoObtenerPreguntas().iniciar();
+            const preguntas = await new UsoCasoObtenerPreguntas(ctx).iniciar();
             ctx.body = JSON.stringify(preguntas);
         } catch (error) {
-            console.log(error);
-            ctx.body = `Hubo un error ${error}`;
-            ctx.status = 406;
+            this.lanzarError(error, ctx);
         }
     }
 }

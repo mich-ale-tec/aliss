@@ -21,10 +21,6 @@ async function init(): Promise<void> {
         process.exit();
     });
 }
-init()
-    .then(e => {
-        console.log('Servidor Listo');
-    })
-    .catch(e => {
-        console.error(e);
-    });
+init().catch(e => {
+    console.error(e);
+});

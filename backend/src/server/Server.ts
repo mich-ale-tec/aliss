@@ -1,4 +1,4 @@
-import koa, { ParameterizedContext } from 'koa';
+import koa from 'koa';
 import logger from 'koa-logger';
 import 'dotenv/config';
 import helmet from 'koa-helmet';
@@ -32,7 +32,7 @@ export default class Server {
         this.app.use(koaBody(this.opcionesBody()));
     }
     public cargarAdministradorError() {
-        this.app.on('error', (err, ctx) => {
+        this.app.on('error', err => {
             console.error(err);
         });
     }
