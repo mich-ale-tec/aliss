@@ -21,6 +21,10 @@ export type TRequestAgregar = {
     Edad: number;
     Nacionalidad: string;
 };
+export type TRequestTransferir = {
+    Codigo: number;
+    Equipo: number;
+};
 export type TRequestPorCodigo = {
     Codigo: number;
 };

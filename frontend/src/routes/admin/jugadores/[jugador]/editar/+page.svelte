@@ -5,42 +5,29 @@
     import { crearJugadorPorDefecto } from '$lib/core/Jugador/Utils/crearObjetos.js';
     import CJugador from '$lib/core/Jugador/Application/CJugador.js';
     import { goto } from '$app/navigation';
-    import UsoCasoAgregar from '$lib/core/Jugador/Application/UsoCasoAgregar.js';
     import UsoCasoEditar from '$lib/core/Jugador/Application/UsoCasoEditar.js';
     import type { TEquipo } from '$lib/core/Equipo/Domain/TEquipo.js';
     import CEquipo from '$lib/core/Equipo/Application/Equipo.js';
+    import { obtenerLabelNombres } from '$lib/core/shared/Utils/convertirNombres.js';
+    import { onMount } from 'svelte';
+    import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
 
     type TKey = keyof TJugador;
     type TLabel = string;
 
     let jugador = page.params.jugador;
-    let accion = page.params.gestion.toUpperCase();
     let equipo = page.url.searchParams.get('equipo');
     let Jugador: TJugador = $state(crearJugadorPorDefecto());
     let Equipos: TEquipo[] = $state([]);
 
-    $effect(() => {
-        if (accion === 'EDITAR') {
-            CJugador.obtenerJugador(jugador).then((jugador: TJugador) => {
-                Jugador = jugador;
-            });
+    onMount(async () => {
+        try {
+            Jugador = await CJugador.obtenerJugador(jugador);
+            Equipos = await CEquipo.obtenerEquipos();
+        } catch (error) {
+            ErrorPersonalizado.errorAPI(error);
         }
-        if (accion === 'NUEVO' && equipo) {
-            Jugador.Equipo = parseInt(equipo);
-        }
-        CEquipo.obtenerEquipos().then(equipos => {
-            Equipos = equipos;
-        });
     });
-    const crearNombre = (): string => {
-        const { ApellidoPaterno, ApellidoMaterno, Nombres } = Jugador;
-        const apellidos = [ApellidoPaterno, ApellidoMaterno].filter(Boolean).join(' ');
-        const nombres = Nombres ?? '';
-        if (apellidos && nombres) return `${apellidos}, ${nombres}`;
-        if (apellidos) return apellidos;
-        if (nombres) return nombres;
-        return '';
-    };
 </script>
 
 {#snippet input(jugador: TJugador, key: TKey, label: TLabel)}
@@ -62,8 +49,7 @@
             <li><a href="/admin/jugadores">Jugadores</a></li>
         {/if}
         <li class="is-active">
-            <a href="/admin/jugadores/jugador" aria-current="page"
-                >{accion === 'NUEVO' ? 'Nuevo' : 'Editar'}</a>
+            <a href="/admin/jugadores/jugador" aria-current="page">Editar</a>
         </li>
     </ul>
 </nav>
@@ -71,15 +57,12 @@
 <div class="columns">
     <div class="column is-half is-offset-one-quarter">
         <h1 class="title is-4">
-            {crearNombre()}
+            {obtenerLabelNombres(Jugador)}
         </h1>
         <div class="field">
             <label for="selectEquipo" class="label">Equipos</label>
             <div class="select">
-                <select
-                    id="selectEquipo"
-                    disabled={accion === 'EDITAR' || Boolean(equipo)}
-                    bind:value={Jugador.Equipo}>
+                <select id="selectEquipo" disabled bind:value={Jugador.Equipo}>
                     {#if Equipos.length > 0}
                         {#each Equipos as Equipo (Equipo.Codigo)}
                             <option
@@ -114,29 +97,16 @@
 
         <div class="field is-grouped mt-5">
             <div class="control">
-                {#if accion === 'NUEVO'}
-                    <button
-                        class="button is-success is-outlined"
-                        onclick={async () => {
-                            const RESPONSE = await new UsoCasoAgregar(Jugador).iniciar();
-                            if (RESPONSE) {
-                                await goto(equipo ? `/admin/equipos/${equipo}` : '/admin/jugadores');
-                            }
-                        }}>
-                        <Icon style="margin-right: 5px" icon="fluent:save-16-filled" />
-                        Agregar</button>
-                {:else}
-                    <button
-                        class="button is-success is-outlined"
-                        onclick={async () => {
-                            const RESPONSE = await new UsoCasoEditar(Jugador).iniciar();
-                            if (RESPONSE) {
-                                await goto(equipo ? `/admin/equipos/${equipo}` : '/admin/jugadores');
-                            }
-                        }}>
-                        <Icon style="margin-right: 5px" icon="fluent:save-16-filled" />
-                        Actualizar</button>
-                {/if}
+                <button
+                    class="button is-success is-outlined"
+                    onclick={async () => {
+                        const RESPONSE = await new UsoCasoEditar(Jugador).iniciar();
+                        if (RESPONSE) {
+                            await goto(equipo ? `/admin/equipos/${equipo}` : '/admin/jugadores');
+                        }
+                    }}>
+                    <Icon style="margin-right: 5px" icon="fluent:save-16-filled" />
+                    Actualizar</button>
             </div>
         </div>
     </div>

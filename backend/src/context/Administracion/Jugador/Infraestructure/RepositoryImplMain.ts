@@ -56,9 +56,26 @@ export class RepositoryImplMain extends RepoImplMongoGene<TJugador> implements R
             Posicion: body.Posicion,
             Edad: body.Edad,
             Nacionalidad: body.Nacionalidad,
+            Status: {
+                IdStatus: 1,
+                Status: 'Activo',
+            },
         };
         await this.saveOne(opciones.Client, opciones.Session, JUGADOR);
         return JUGADOR;
+    }
+    async darBaja(codigo: TJugador['Codigo'], opciones: Required<TOptions>) {
+        const FILTER: Filter<TJugador> = { Codigo: codigo };
+        const UPDATE: UpdateFilter<TJugador> = {
+            $set: {
+                Status: {
+                    IdStatus: 10,
+                    Status: 'Inactivo',
+                },
+                Equipo: 0,
+            },
+        };
+        await this.updateOne(opciones.Client, opciones.Session, FILTER, UPDATE);
     }
     private async obtenerCodigo(opciones: TOptions): Promise<TJugador['Codigo']> {
         const pipe: Array<pipeline> = [

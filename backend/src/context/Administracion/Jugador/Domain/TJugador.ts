@@ -8,4 +8,14 @@ export type TJugador = {
     Posicion: string;
     Edad: number;
     Nacionalidad: string;
+    Status: TStatus;
+};
+type TStatus = TStatusActivo | TStatusInactivo;
+type TStatusActivo = {
+    IdStatus: 1;
+    Status: 'Activo';
+};
+type TStatusInactivo = {
+    IdStatus: 10;
+    Status: 'Inactivo';
 };

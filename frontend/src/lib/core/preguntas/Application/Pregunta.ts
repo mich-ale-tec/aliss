@@ -17,7 +17,7 @@ export default class CPregunta {
         this.Respuesta = respuesta;
     }
     public async validarRespuestas(resultado: UsoCasoAlmacenarResultado): Promise<TResultadoPregunta> {
-        if (resultado.existeResultado()) return resultado.obtenerResultado();
+        // if (resultado.existeResultado()) return resultado.obtenerResultado();
         const url = `${localStorage.getItem('URL_BACKEND')}/Cuestionario/Respuesta/validar`;
         const res = await axios.post(url, {
             Respuestas: this.Respuestas.join(':'),

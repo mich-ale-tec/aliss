@@ -8,18 +8,21 @@
     import crearObjeto from '$lib/core/Equipo/Utils/crearObjeto.js';
     import type { TEquipo } from '$lib/core/Equipo/Domain/TEquipo.js';
     import Icon from '@iconify/svelte';
+    import { onMount } from 'svelte';
 
     let jugador = page.params.jugador;
     let equipo = page.url.searchParams.get('equipo');
     let Jugador: TJugador = $state(crearJugadorPorDefecto());
     let Equipo: TEquipo = $state(crearObjeto());
 
-    $effect(() => {
-        CJugador.obtenerJugador(jugador)
-            .then((jugador: TJugador) => (Jugador = jugador))
-            .catch(err => ErrorPersonalizado.errorAPI(err));
-        if (equipo) {
-            CEquipo.obtenerEquipo(equipo).then(equipo => (Equipo = equipo));
+    onMount(async () => {
+        try {
+            Jugador = await CJugador.obtenerJugador(jugador);
+            if (equipo) {
+                Equipo = await CEquipo.obtenerEquipo(equipo);
+            }
+        } catch (error) {
+            ErrorPersonalizado.errorAPI(error);
         }
     });
 </script>

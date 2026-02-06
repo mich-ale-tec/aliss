@@ -22,10 +22,9 @@ export default class UsoCasoObtenerDashboard extends UsoCaso {
             const EQUIPOS = await this.repoEquipo.obtener({ Client: client });
             for (const jugador of JUGADORES) {
                 const EQUIPO = EQUIPOS.find(e => e.Codigo === jugador.Equipo);
-                if (!EQUIPO) continue;
                 JUGADORES_DASHBOARD.push({
                     ...jugador,
-                    EquipoNombre: EQUIPO.Nombre,
+                    EquipoNombre: EQUIPO ? EQUIPO.Nombre : 'Sin Equipo',
                 });
             }
             return JUGADORES_DASHBOARD;

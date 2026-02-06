@@ -7,18 +7,17 @@
     import type { TJugador } from '$lib/core/Jugador/Domain/TJugador.js';
     import CJugador from '$lib/core/Jugador/Application/CJugador.js';
     import Indicador from '$lib/components/Administracion/Indicador.svelte';
+    import UsoCasoDarBaja from '$lib/core/Jugador/Application/UsoCasoDarBaja.js';
+    import { obtenerLabelNombres } from '$lib/core/shared/Utils/convertirNombres.js';
+    import { onMount } from 'svelte';
 
     let equipo = page.params.equipo;
     let Equipo: TEquipo = $state(crearObjeto());
     let Jugadores: TJugador[] = $state([]);
 
-    $effect(() => {
-        CEquipo.obtenerEquipo(equipo).then((equipo: TEquipo) => {
-            Equipo = equipo;
-        });
-        CJugador.obternerJugadorePorEquipo(equipo).then((jugadores: TJugador[]) => {
-            Jugadores = jugadores;
-        });
+    onMount(async () => {
+        Equipo = await CEquipo.obtenerEquipo(equipo);
+        Jugadores = await CJugador.obternerJugadorePorEquipo(equipo);
     });
 </script>
 
@@ -66,10 +65,7 @@
 </div>
 
 <div class="card container_indicadores">
-    <Indicador
-        icono="fluent:people-team-16-filled"
-        titulo="Total Jugadores"
-        indicador={Jugadores.length.toString()} />
+    <Indicador icono="fluent:people-team-16-filled" titulo="Total Jugadores" indicador={Jugadores.length} />
 </div>
 
 <div class="planilla columns">
@@ -83,6 +79,7 @@
                     <th>Posición</th>
                     <th>Edad</th>
                     <th>Nacionalidad</th>
+                    <th>Dar Baja</th>
                     <th>Transferir</th>
                     <th>Editar</th>
                 </tr>
@@ -90,17 +87,35 @@
             {#if Jugadores.length > 0}
                 <tbody>
                     {#each Jugadores as jugador (jugador.Codigo)}
-                        {@const nombre = `${jugador.ApellidoPaterno} ${jugador.ApellidoMaterno}, ${jugador.Nombres}`}
                         <tr>
                             <th>{jugador.Numero}</th>
                             <td
                                 ><a href="/admin/jugadores/{jugador.Codigo}?equipo={Equipo.Codigo}"
-                                    >{nombre}</a
+                                    >{obtenerLabelNombres(jugador)}</a
                                 ></td>
                             <td>{jugador.Posicion}</td>
                             <td class="has-text-centered">{jugador.Edad}</td>
                             <td class="has-text-centered">{jugador.Nacionalidad}</td>
-                            <td><a href="/admin/jugadores/{jugador.Codigo}/transferir/transferir"><Icon icon="mingcute:transfer-fill" width="24" /></a></td>
+                            <td
+                                ><button
+                                    class="button is-danger"
+                                    onclick={async () => {
+                                        const RESPONSE = await new UsoCasoDarBaja(jugador).iniciar();
+                                        if (RESPONSE) {
+                                            Jugadores = Jugadores.filter(e => e.Codigo !== RESPONSE.Codigo);
+                                        }
+                                    }}
+                                    ><Icon
+                                        icon="material-symbols-light:delete"
+                                        width="19"
+                                        color="white" /></button
+                                ></td>
+                            <td
+                                ><a
+                                    class="button"
+                                    href="/admin/jugadores/{jugador.Codigo}/transferir?equipo={Equipo.Codigo}"
+                                    ><Icon icon="mingcute:transfer-fill" width="19" /></a
+                                ></td>
                             <td class="has-text-centered"
                                 ><a
                                     class="button"

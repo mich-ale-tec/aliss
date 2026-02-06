@@ -2,13 +2,28 @@
     import Icon from '@iconify/svelte';
     import type { TEquipoDashboard } from '$lib/core/Equipo/Domain/TEquipo.js';
     import CEquipo from '$lib/core/Equipo/Application/Equipo.js';
+    import { onMount } from 'svelte';
+    import Pag from '$lib/components/Pag.svelte';
+    import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
 
     let Equipos: Array<TEquipoDashboard> = $state([]);
+    let EquiposPedazo: Array<TEquipoDashboard> = $state([]);
+    const pedazo: number = 10;
+    let paginaActual: number = $state(1);
 
+    const cambiarPaginaActual = (pagina: number) => {
+        paginaActual = pagina;
+    };
     $effect(() => {
-        CEquipo.obtenerEquiposDashboard().then(equipos => {
-            Equipos = equipos;
-        });
+        EquiposPedazo = Equipos.slice((paginaActual - 1) * pedazo, paginaActual * pedazo);
+    });
+
+    onMount(async () => {
+        try {
+            Equipos = await CEquipo.obtenerEquiposDashboard();
+        } catch (error) {
+            ErrorPersonalizado.errorAPI(error);
+        }
     });
 </script>
 
@@ -33,20 +48,21 @@
 </div>
 
 <div class="container_equipos">
-    <table class="table is-hoverable is-striped">
-        <thead>
-            <tr>
-                <th></th>
-                <th>Equipo</th>
-                <th>Entrenador</th>
-                <th>Jugadores</th>
-                <th>Fundado</th>
-                <th>Editar</th>
-            </tr>
-        </thead>
-        {#if Equipos.length > 0}
+    {#if EquiposPedazo.length > 0}
+        <Pag numeroRegistros={Equipos.length} {pedazo} {cambiarPaginaActual} {paginaActual} />
+        <table class="table is-hoverable is-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Equipo</th>
+                    <th>Entrenador</th>
+                    <th>Jugadores</th>
+                    <th>Fundado</th>
+                    <th>Editar</th>
+                </tr>
+            </thead>
             <tbody>
-                {#each Equipos as equipo (equipo.Codigo)}
+                {#each EquiposPedazo as equipo (equipo.Codigo)}
                     <tr>
                         <td><img class="img_logo" src={equipo.Logo} alt="logo" /></td>
                         <td><a href="/admin/equipos/{equipo.Codigo}">{equipo.Nombre}</a></td>
@@ -60,8 +76,8 @@
                     </tr>
                 {/each}
             </tbody>
-        {/if}
-    </table>
+        </table>
+    {/if}
 </div>
 
 <style lang="scss">

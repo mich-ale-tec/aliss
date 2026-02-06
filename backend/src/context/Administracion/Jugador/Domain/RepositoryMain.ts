@@ -9,4 +9,5 @@ export interface RepositoryMain extends RepositoryGenerico<TJugador> {
     obtenerJugadorPorCodigo(codigo: TJugador['Codigo'], opcion: TOptions): Promise<TJugador>;
     editar(body: TRequestEditar, opciones: Required<TOptions>): Promise<void>;
     agregar(body: TRequestAgregar, opciones: Required<TOptions>): Promise<TJugador>;
+    darBaja(codigo: TJugador['Codigo'], opcion: Required<TOptions>): Promise<void>;
 }

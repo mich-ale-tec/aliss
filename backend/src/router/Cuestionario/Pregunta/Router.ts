@@ -7,7 +7,7 @@ export default class Router extends RouterAbstrac {
         super(prefix);
     }
     public async construirRutas() {
-        this.router.get('/obtener', this.obtener);
+        this.router.get('/obtener', this.obtener.bind(this));
         return this.router;
     }
     private async obtener(ctx: ParameterizedContext) {

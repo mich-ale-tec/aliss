@@ -3,7 +3,7 @@
     interface Props {
         icono: string;
         titulo: string;
-        indicador: string;
+        indicador: number;
     }
     let { icono, titulo, indicador }: Props = $props();
 </script>

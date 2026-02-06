@@ -10,6 +10,8 @@ import UsoCasoObtener from '../../../context/Administracion/Equipo/Application/U
 import ValidatorAJV from '../../../context/Administracion/Equipo/Infraestructure/Validator';
 import { TEquipoDashboard } from '../../../context/Administracion/Equipo/Domain/TResponse';
 import UsoCasoObtenerDashboard from '../../../context/Administracion/Equipo/Application/UsoCasoObtenerDashboard';
+import { TEstadistica } from '../../../context/Administracion/Equipo/Domain/Estadistica';
+import UsoCasoEstadistica from '../../../context/Administracion/Equipo/Application/UsoCasoEstadistica';
 
 export default class Router extends RouterAbstrac {
     private validatorAJV: ValidatorAJV;
@@ -24,7 +26,16 @@ export default class Router extends RouterAbstrac {
         this.router.post('/obtenerPorCodigo', this.obtenerPorCodigo.bind(this));
         this.router.post('/agregar', this.agregar.bind(this));
         this.router.patch('/editar', this.editar.bind(this));
+        this.router.get('/estadistica', this.estadistica.bind(this));
         return this.router;
+    }
+    private async estadistica(ctx: ParameterizedContext) {
+        try {
+            const ESTADISTICA: TEstadistica = await new UsoCasoEstadistica(ctx).init();
+            ctx.body = JSON.stringify(ESTADISTICA);
+        } catch (error) {
+            this.lanzarError(error, ctx);
+        }
     }
     private async obtenerDashboard(ctx: ParameterizedContext) {
         try {

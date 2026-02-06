@@ -7,6 +7,7 @@
     import Resultado from '$lib/components/Resultado.svelte';
     import Progress from '$lib/components/Progress.svelte';
     import UsoCasoAlmacenarResultado from '$lib/core/Respuesta/Application/UsoCasoAlmacenarResultado.js';
+    import Navbar from '$lib/components/Navbar.svelte';
 
     const resultado = new UsoCasoAlmacenarResultado('1');
     // Variables
@@ -34,6 +35,7 @@
     });
 </script>
 
+<Navbar />
 <div class="contenedor">
     {#if SeTermino}
         {#await pregunta.validarRespuestas(resultado)}

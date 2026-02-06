@@ -1,6 +1,7 @@
 import type { TEquipo, TEquipoDashboard } from '$lib/core/Equipo/Domain/TEquipo.js';
 import axios from 'axios';
 import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
+import type { TEstadistica } from '$lib/core/Equipo/Domain/Estadistica.js';
 
 export default class CEquipo {
     protected Codigo: number;
@@ -71,6 +72,11 @@ export default class CEquipo {
             Estadio: EQUIPO.Estadio || '',
             Ciudad: EQUIPO.Ciudad || '',
         };
+    }
+    static async estadistica(): Promise<TEstadistica> {
+        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Equipo/estadistica`;
+        const res = await axios.get(url);
+        return res.data as TEstadistica;
     }
     private esNumero(valor: string): boolean {
         const regex = /^\d+$/;

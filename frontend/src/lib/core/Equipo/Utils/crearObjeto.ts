@@ -9,5 +9,9 @@ export default function crearObjeto(): TEquipo {
         Descripcion: '',
         Jugadores: [],
         Logo: '',
+        Entrenador: '',
+        Fundado: '',
+        Estadio: '',
+        Ciudad: '',
     };
 }

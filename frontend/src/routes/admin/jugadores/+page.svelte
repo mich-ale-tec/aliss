@@ -2,11 +2,53 @@
     import Icon from '@iconify/svelte';
     import type { TJugadorDashboard } from '$lib/core/Jugador/Domain/TJugador.js';
     import CJugador from '$lib/core/Jugador/Application/CJugador.js';
+    import UsoCasoDarBaja from '$lib/core/Jugador/Application/UsoCasoDarBaja.js';
+    import convertirJugadorDashAJugadorAPI from '$lib/core/Jugador/Utils/convertirEntity.js';
+    import { obtenerLabelNombres } from '$lib/core/shared/Utils/convertirNombres.js';
+    import { onMount } from 'svelte';
+    import Pag from '$lib/components/Pag.svelte';
+    import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
+    import Ordenamiento from '$lib/components/Ordenamiento.svelte';
 
+    let JugadoresCompletos: TJugadorDashboard[] = $state([]);
     let Jugadores: TJugadorDashboard[] = $state([]);
+    const pedazo: number = 50;
+    let paginaActual: number = $state(1);
 
+    const cambiarPaginaActual = (pagina: number) => {
+        paginaActual = pagina;
+    };
+    const ordenarEstado = (valor: boolean) => {
+        paginaActual = 1;
+        let jugadoresOrdenados: TJugadorDashboard[] = [];
+        for (const Jugador of JugadoresCompletos) {
+            const esInactivo = Jugador.Status.IdStatus === 10;
+            if (esInactivo) {
+                if (valor) {
+                    jugadoresOrdenados.unshift(Jugador);
+                } else {
+                    jugadoresOrdenados.push(Jugador);
+                }
+            } else {
+                if (valor) {
+                    jugadoresOrdenados.push(Jugador);
+                } else {
+                    jugadoresOrdenados.unshift(Jugador);
+                }
+            }
+        }
+        JugadoresCompletos = jugadoresOrdenados;
+    };
     $effect(() => {
-        CJugador.obtenerJugadoresDashboard().then(jugadores => (Jugadores = jugadores));
+        Jugadores = JugadoresCompletos.slice((paginaActual - 1) * pedazo, paginaActual * pedazo);
+    });
+
+    onMount(async () => {
+        try {
+            JugadoresCompletos = await CJugador.obtenerJugadoresDashboard();
+        } catch (error) {
+            ErrorPersonalizado.errorAPI(error);
+        }
     });
 </script>
 
@@ -29,31 +71,55 @@
     </div>
 </div>
 <div class="container_jugadores">
-    <table class="table is-hoverable is-striped">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Jugador</th>
-                <th>Posición</th>
-                <th>Equipo</th>
-                <th>Edad</th>
-                <th>Nacionalidad</th>
-                <th>Editar</th>
-            </tr>
-        </thead>
-        {#if Jugadores.length > 0}
+    {#if Jugadores.length > 0}
+        <Pag numeroRegistros={JugadoresCompletos.length} {pedazo} {cambiarPaginaActual} {paginaActual} />
+        <table class="table is-hoverable is-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Jugador</th>
+                    <th>Posición</th>
+                    <th>Equipo</th>
+                    <th><Ordenamiento texto="Estado" callback={ordenarEstado} /></th>
+                    <th>Edad</th>
+                    <th>Nacionalidad</th>
+                    <th>Dar Baja</th>
+                    <th>Editar</th>
+                </tr>
+            </thead>
             <tbody>
                 {#each Jugadores as jugador (jugador.Codigo)}
                     <tr>
                         <td>{jugador.Numero}</td>
                         <td
                             ><a href="/admin/jugadores/{jugador.Codigo}?equipo={jugador.Equipo}"
-                                >{jugador.ApellidoPaterno} {jugador.Nombres}</a
+                                >{obtenerLabelNombres(jugador)}</a
                             ></td>
                         <td>{jugador.Posicion}</td>
                         <td><a href="/admin/equipos/{jugador.Equipo}">{jugador.EquipoNombre}</a></td>
+                        <td
+                            ><span class="tag {jugador.Status.IdStatus === 1 ? 'is-primary' : 'is-danger'}"
+                                >{jugador.Status.Status}</span
+                            ></td>
                         <td class="has-text-centered">{jugador.Edad}</td>
                         <td class="has-text-centered">{jugador.Nacionalidad}</td>
+                        <td
+                            ><button
+                                class="button is-danger"
+                                onclick={async () => {
+                                    const jugadorAPI = convertirJugadorDashAJugadorAPI(jugador);
+                                    const RESPONSE = await new UsoCasoDarBaja(jugadorAPI).iniciar();
+                                    if (RESPONSE) {
+                                        JugadoresCompletos = JugadoresCompletos.filter(
+                                            e => e.Codigo !== RESPONSE.Codigo,
+                                        );
+                                    }
+                                }}
+                                ><Icon
+                                    icon="material-symbols-light:delete"
+                                    width="19"
+                                    color="white" /></button
+                            ></td>
                         <td class="has-text-centered"
                             ><a class="button" href="/admin/jugadores/{jugador.Codigo}/editar"
                                 ><Icon icon="fluent:edit-20-filled" color="black" /></a>
@@ -61,8 +127,8 @@
                     </tr>
                 {/each}
             </tbody>
-        {/if}
-    </table>
+        </table>
+    {/if}
 </div>
 
 <style lang="scss">
@@ -70,10 +136,6 @@
         padding: 1rem 2rem;
         border: 1px solid rgb(238, 238, 238);
         border-radius: 1rem;
-        .img_logo {
-            height: 30px;
-            width: auto;
-        }
     }
     .col_acciones {
         margin-top: auto;

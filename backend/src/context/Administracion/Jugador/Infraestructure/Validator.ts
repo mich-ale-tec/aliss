@@ -6,6 +6,7 @@ import {
     TRequestEditar,
     TRequestPorCodigo,
     TRequestPorEquipo,
+    TRequestTransferir,
 } from '../Domain/TRequest';
 
 export default class ValidatorAJV extends ValidatorGenerico {
@@ -38,6 +39,18 @@ export default class ValidatorAJV extends ValidatorGenerico {
             additionalProperties: false,
         };
         this.validar<TRequestEditar>(datos, schema, ctx);
+    }
+    transferir(datos: TRequestTransferir, ctx: ParameterizedContext) {
+        const schema: JSONSchemaType<TRequestTransferir> = {
+            type: 'object',
+            properties: {
+                Codigo: { type: 'number' },
+                Equipo: { type: 'number' },
+            },
+            required: ['Codigo', 'Equipo'],
+            additionalProperties: false,
+        };
+        this.validar<TRequestTransferir>(datos, schema, ctx);
     }
     agregar(datos: TRequestAgregar, ctx: ParameterizedContext) {
         const schema: JSONSchemaType<TRequestAgregar> = {

@@ -1,6 +1,7 @@
 import type { TJugador, TJugadorDashboard } from '$lib/core/Jugador/Domain/TJugador.js';
 import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
 import axios from 'axios';
+import type { TEstadistica } from '$lib/core/Jugador/Domain/Estadistica.js';
 
 export default class CJugador {
     protected readonly Codigo: number;
@@ -8,11 +9,11 @@ export default class CJugador {
     protected readonly ApellidoPaterno: string;
     protected readonly ApellidoMaterno: string;
     protected readonly Nombres: string;
-
     protected readonly Numero: number;
     protected readonly Posicion: string;
     protected readonly Edad: number;
     protected readonly Nacionalidad: string;
+    protected readonly IdStatus: number;
 
     constructor(jugador: TJugador) {
         this.Codigo = jugador.Codigo;
@@ -20,11 +21,23 @@ export default class CJugador {
         this.ApellidoPaterno = jugador.ApellidoPaterno;
         this.ApellidoMaterno = jugador.ApellidoMaterno;
         this.Nombres = jugador.Nombres;
-
         this.Numero = this.convertirNumero(jugador.Numero);
         this.Posicion = jugador.Posicion;
         this.Edad = this.convertirNumero(jugador.Edad);
         this.Nacionalidad = jugador.Nacionalidad;
+        this.IdStatus = jugador.Status.IdStatus;
+    }
+    protected validarDarBaja() {
+        if (this.IdStatus !== 1) {
+            throw new ErrorPersonalizado('¡El jugador no se encuentra activo!');
+        }
+    }
+    protected validarTranferencia(equipo: string) {
+        if (parseInt(equipo) === 0) {
+            throw new ErrorPersonalizado('¡Tienes que escoger un equipo!');
+        }
+        if (this.Equipo === parseInt(equipo))
+            throw new ErrorPersonalizado('¡No se puede transferir al mismo equipo!');
     }
     protected validar() {
         this.validarNumero();
@@ -125,9 +138,11 @@ export default class CJugador {
         }));
     }
 
-    static async obtenerJugadores(): Promise<TJugador[]> {
-        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Jugador/obtener`;
-        const response = await axios.get(url);
+    static async obternerJugadorePorEquipo(equipo: string): Promise<Array<TJugador>> {
+        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Jugador/obtenerPorEquipo`;
+        const response = await axios.post(url, {
+            Equipo: parseInt(equipo),
+        });
         const JUGADORES = response.data as Array<TJugador>;
         return JUGADORES.map((e, i) => ({
             ...e,
@@ -138,24 +153,9 @@ export default class CJugador {
             Nacionalidad: e.Nacionalidad || '',
         }));
     }
-    static async obternerJugadorePorEquipo(equipo: string): Promise<Array<TJugador>> {
-        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Jugador/obtenerPorEquipo`;
-        const response = await axios.post(url, {
-            Equipo: parseInt(equipo),
-        });
-        const JUGADORES = response.data as Array<TJugador>;
-        return JUGADORES.map((e, i) => ({
-            Index: i,
-            Codigo: e.Codigo,
-            Equipo: e.Equipo,
-            ApellidoPaterno: e.ApellidoPaterno,
-            ApellidoMaterno: e.ApellidoMaterno,
-            Nombres: e.Nombres,
-            // Agregar
-            Numero: e.Numero || 0,
-            Posicion: e.Posicion || '',
-            Edad: e.Edad || 18,
-            Nacionalidad: e.Nacionalidad || '',
-        }));
+    static async estadistica(): Promise<TEstadistica> {
+        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Jugador/estadistica`;
+        const res = await axios.get(url);
+        return res.data as TEstadistica;
     }
 }

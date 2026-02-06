@@ -2,11 +2,13 @@
     import { PUBLIC_URL_BACKEND } from '$env/static/public';
     import Icon from '@iconify/svelte';
     import { onMount } from 'svelte';
+    import Navbar from '$lib/components/Navbar.svelte';
     onMount(() => {
         window.localStorage.setItem('URL_BACKEND', PUBLIC_URL_BACKEND);
     });
 </script>
 
+<Navbar />
 <div class="container main">
     <h1 class="title is-1">Fuchibol</h1>
     <h2 class="subtitle is-3">¡El mejor quizz de la liga 1!</h2>

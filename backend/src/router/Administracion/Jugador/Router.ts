@@ -11,9 +11,13 @@ import UsoCasoObtener from '../../../context/Administracion/Jugador/Application/
 import UsoCasoObtenerPorCodigo from '../../../context/Administracion/Jugador/Application/UsoCasoObtenerPorCodigo';
 import { TJugadorDashboard } from '../../../context/Administracion/Jugador/Domain/TResponse';
 import UsoCasoObtenerDashboard from '../../../context/Administracion/Jugador/Application/UsoCasoObtenerDashboard';
+import UsoCasoTransferir from '../../../context/Administracion/Jugador/Application/UsoCasoTransferir';
+import UsoCasoDarBaja from '../../../context/Administracion/Jugador/Application/UsoCasoDarBaja';
+import { TEstadistica } from '../../../context/Administracion/Jugador/Domain/Estadistica';
+import UsoCasoEstadistica from '../../../context/Administracion/Jugador/Application/UsoCasoEstadistica';
 
 export default class Router extends RouterAbstrac {
-    private validatorAJV: ValidatorAJV;
+    private readonly validatorAJV: ValidatorAJV;
     constructor(prefix: string) {
         super(prefix, AdapterConfigure);
         this.validatorAJV = new ValidatorAJV();
@@ -26,7 +30,38 @@ export default class Router extends RouterAbstrac {
         this.router.post('/obtenerPorCodigo', this.obtenerPorCodigo.bind(this));
         this.router.patch('/editar', this.editar.bind(this));
         this.router.post('/agregar', this.agregar.bind(this));
+        this.router.post('/transferir', this.transferir.bind(this));
+        this.router.post('/darBaja', this.darBaja.bind(this));
+        this.router.get('/estadistica', this.estadistica.bind(this));
         return this.router;
+    }
+    public async estadistica(ctx: ParameterizedContext) {
+        try {
+            const ESTADISTICA: TEstadistica = await new UsoCasoEstadistica(ctx).init();
+            ctx.body = JSON.stringify(ESTADISTICA);
+        } catch (error) {
+            this.lanzarError(error, ctx);
+        }
+    }
+    public async darBaja(ctx: ParameterizedContext) {
+        try {
+            const body = ctx.request.body;
+            this.validatorAJV.obtenerPorCodigo(body, ctx);
+            const JUGADOR: TJugador = await new UsoCasoDarBaja(ctx).init(body);
+            ctx.body = JSON.stringify(JUGADOR);
+        } catch (error) {
+            this.lanzarError(error, ctx);
+        }
+    }
+    public async transferir(ctx: ParameterizedContext) {
+        try {
+            const body = ctx.request.body;
+            this.validatorAJV.transferir(body, ctx);
+            const JUGADOR: TJugador = await new UsoCasoTransferir(ctx).init(body);
+            ctx.body = JSON.stringify(JUGADOR);
+        } catch (error) {
+            this.lanzarError(error, ctx);
+        }
     }
     public async obtenerPorCodigo(ctx: ParameterizedContext) {
         try {

@@ -7,6 +7,7 @@
     import UsoCasoAgregar from '$lib/core/Equipo/Application/UsoCasoAgregar.js';
     import { goto } from '$app/navigation';
     import UsoCasoEditar from '$lib/core/Equipo/Application/UsoCasoEditar.js';
+    import { onMount } from 'svelte';
 
     type TKey = keyof TEquipo;
     type TLabel = string;
@@ -15,11 +16,9 @@
     let accion = page.params.gestion.toUpperCase();
     let Equipo: TEquipo = $state(crearObjeto());
 
-    $effect(() => {
+    onMount(async () => {
         if (accion === 'EDITAR') {
-            CEquipo.obtenerEquipo(equipo).then((equipo: TEquipo) => {
-                Equipo = equipo;
-            });
+            Equipo = await CEquipo.obtenerEquipo(equipo);
         }
     });
 </script>

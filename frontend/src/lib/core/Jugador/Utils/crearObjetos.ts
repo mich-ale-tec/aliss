@@ -1,5 +1,4 @@
 import type { TJugador } from '$lib/core/Jugador/Domain/TJugador.js';
-import type { TEquipo } from '$lib/core/Equipo/Domain/TEquipo.js';
 
 export const crearJugadorPorDefecto = (): TJugador => {
     return {
@@ -12,6 +11,10 @@ export const crearJugadorPorDefecto = (): TJugador => {
         Numero: 0,
         Posicion: '',
         Edad: 18,
-        Nacionalidad: '',
+        Nacionalidad: 'Perú',
+        Status: {
+            IdStatus: 1,
+            Status: 'Activo',
+        },
     };
 };

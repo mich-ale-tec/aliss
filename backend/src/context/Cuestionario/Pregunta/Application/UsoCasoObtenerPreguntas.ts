@@ -8,6 +8,7 @@ import { RepositoryMain as RMJugador } from '../../../Administracion/Jugador/Dom
 import { RepositoryMain as RMEquipo } from '../../../Administracion/Equipo/Domain/RepositoryMain';
 import { ParameterizedContext } from 'koa';
 import UsoCaso from '../../../shared/Infraestructure/UsoCaso';
+import { obtenerLabelNombres } from '../../../shared/Utils/convertirNombres';
 
 export default class UsoCasoObtenerPreguntas extends UsoCaso {
     private readonly repoJugador: RMJugador;
@@ -21,7 +22,7 @@ export default class UsoCasoObtenerPreguntas extends UsoCaso {
         const PREGUNTAS: Array<EntityMain> = [];
         const JUGADORES = await this.obtenerJugadores();
         const EQUIPOS = await this.obtenerEquipos();
-        const INDICES_EQUIPOS_ALEATORIOS = this.generarNumerosAzar(4, 0, 3);
+        const INDICES_EQUIPOS_ALEATORIOS = this.generarNumerosAzar(10, 0, EQUIPOS.length - 1);
         for (const INDICE_EQUIPO_ALEATORIO of INDICES_EQUIPOS_ALEATORIOS) {
             const EQUIPO = EQUIPOS[INDICE_EQUIPO_ALEATORIO];
             const PREGUNTA = this.obtenerPregunta(EQUIPO);
@@ -35,12 +36,12 @@ export default class UsoCasoObtenerPreguntas extends UsoCaso {
     private generarRespuestas(jugador: TJugador, jugadoresInco: TJugador[], pregunta: EntityMain) {
         pregunta.respuestas.push({
             id: jugador.Codigo,
-            nombre: `${jugador.ApellidoPaterno} ${jugador.ApellidoMaterno}, ${jugador.Nombres}`,
+            nombre: obtenerLabelNombres(jugador),
         });
         for (const JUGADOR of jugadoresInco) {
             pregunta.respuestas.push({
                 id: JUGADOR.Codigo,
-                nombre: `${JUGADOR.ApellidoPaterno} ${JUGADOR.ApellidoMaterno}, ${JUGADOR.Nombres}`,
+                nombre: obtenerLabelNombres(JUGADOR),
             });
         }
         pregunta.respuestas.sort((a, b) => a.id - b.id);
