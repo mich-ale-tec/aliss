@@ -4,6 +4,7 @@
     import { crearObjeto } from '$lib/core/Torneo/Utils/crearObjeto.js';
     import { onMount } from 'svelte';
     import CTorneo from '$lib/core/Torneo/Application/CTorneo.js';
+    import Indicador from '$lib/components/Administracion/Indicador.svelte';
 
     debugger;
     let torneo = page.params.torneo;
@@ -57,3 +58,25 @@
         </div>
     </div>
 </div>
+
+<div class="container_cards mb-6">
+    <Indicador icono="arcticons:besoccer" titulo="Partidos" indicador={38} />
+</div>
+
+<style lang="scss">
+    .card_equipo {
+        box-shadow: none;
+        border: 1px solid rgb(238, 238, 238);
+        border-radius: 1rem;
+        .img_logo {
+            height: 64px;
+            width: auto;
+        }
+    }
+    .container_cards {
+        margin-top: 3rem;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+    }
+</style>

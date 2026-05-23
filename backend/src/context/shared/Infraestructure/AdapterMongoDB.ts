@@ -1,9 +1,22 @@
-import { ClientSession, MongoClient, ObjectId, ReadConcern, ReadPreference } from 'mongodb';
+import {
+    ClientSession,
+    MongoClient,
+    MongoClientOptions,
+    ObjectId,
+    ReadConcern,
+    ReadPreference,
+} from 'mongodb';
 
 export class AdapterMongoDB {
     public static async connection(uri: string, directConnection: boolean): Promise<MongoClient> {
         try {
-            return await MongoClient.connect(uri, { directConnection: directConnection || true });
+            const options: MongoClientOptions = {};
+            if (directConnection) {
+                Object.assign<MongoClientOptions, MongoClientOptions>(options, {
+                    directConnection: directConnection,
+                });
+            }
+            return await MongoClient.connect(uri, options);
         } catch (error) {
             let message = '';
             if (error instanceof Error) {
@@ -58,7 +71,6 @@ export class AdapterMongoDB {
             const d = new Date(str);
             return d.toISOString() === str; // valid date
         };
-
         for (const key of Object.keys(obj)) {
             if (obj[key]) {
                 if (key.includes('_id')) {

@@ -11,16 +11,3 @@
 <div class="container-fluid mb-6">
     {@render children()}
 </div>
-
-<style lang="scss">
-    .navbar_header {
-        border-bottom: rgba(64, 70, 84, 0.2) 1px solid;
-        .navbar-menu {
-            .navbar-start {
-                a:hover {
-                    background-color: rgba(114, 87, 82, 0.2);
-                }
-            }
-        }
-    }
-</style>

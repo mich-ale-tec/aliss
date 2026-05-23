@@ -16,7 +16,12 @@ export default class Server {
     constructor() {
         this.app = new koa();
         this.port = Number(process.env.PUERTO || '3100');
-        this.listaBlanca = ['localhost', 'http://localhost:5173'];
+        this.listaBlanca = [
+            'localhost',
+            'http://localhost:5173',
+            'http://localhost:4173',
+            'http://98.89.34.8',
+        ];
     }
     // Public
     public cargarConfiguracion() {

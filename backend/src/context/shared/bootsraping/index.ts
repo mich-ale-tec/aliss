@@ -15,6 +15,7 @@ export class Bootstraping {
             case 'mongo':
             case 'mongodb': {
                 const directConnection = process.env.MONGO_DIRECTCONECTION === 'true';
+                console.log(`URI: ${uri}`);
                 this.databaseBootstrap = new BootstrapingDatabaseMongo(
                     uri,
                     database,
