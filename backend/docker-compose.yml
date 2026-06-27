@@ -1,0 +1,41 @@
+services:
+  mongo1:
+    image: mongo
+    command: ["mongod", "--replSet", "myReplicaSet", "--bind_ip_all"]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "27017:27017"
+    volumes:
+      - aliss1-data:/data/db
+    networks:
+      - mongoCluster
+  mongo2:
+    image: mongo
+    command: ["mongod", "--replSet", "myReplicaSet", "--bind_ip_all"]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "27018:27017"
+    volumes:
+      - aliss2-data:/data/db
+    networks:
+      - mongoCluster
+  mongo3:
+    image: mongo
+    command: ["mongod", "--replSet", "myReplicaSet", "--bind_ip_all"]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "27019:27017"
+    volumes:
+      - aliss3-data:/data/db
+    networks:
+      - mongoCluster
+volumes:
+  aliss1-data:
+  aliss2-data:
+  aliss3-data:
+networks:
+  mongoCluster:
+    driver: bridge
