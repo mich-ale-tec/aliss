@@ -1,5 +1,5 @@
 import type { TLigaAPI } from '$lib/core/Liga/Domain/TLiga.js';
-import axios from 'axios';
+import { api } from '$lib/core/shared/Infraestructure/api.js';
 import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
 
 export default class CLiga {
@@ -68,14 +68,12 @@ export default class CLiga {
         return regex.test(valor);
     }
     static async obtenerLigas(): Promise<TLigaAPI[]> {
-        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Liga/obtener`;
-        const response = await axios.get(url);
+        const response = await api.get('/Administracion/Liga/obtener');
         return response.data as TLigaAPI[];
     }
     static async obtenerLiga(codigo: string): Promise<TLigaAPI | void> {
         try {
-            const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Liga/obtenerPorCodigo`;
-            const res = await axios.post(url, {
+            const res = await api.post('/Administracion/Liga/obtenerPorCodigo', {
                 Liga: parseInt(codigo),
             });
             return res.data as TLigaAPI;

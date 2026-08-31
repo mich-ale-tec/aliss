@@ -10,6 +10,7 @@
     import CTorneo from '$lib/core/Torneo/Application/CTorneo.js';
     import CEquipo from '$lib/core/Equipo/Application/Equipo.js';
     import type { TEquipo } from '$lib/core/Equipo/Domain/TEquipo.js';
+    import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
 
     let liga = page.params.liga;
     let Liga: TLigaAPI = $state(crearObjeto());
@@ -18,20 +19,21 @@
     let Tab: string = $state('TORNEO');
 
     onMount(async () => {
-        const resLiga = await CLiga.obtenerLiga(liga);
-        if (resLiga) {
-            Liga = resLiga;
-            const codigosEquipos = Liga.Equipos;
-            const equipos: TEquipo[] = [];
-            for (const codigo of codigosEquipos) {
-                const equipo = await CEquipo.obtenerEquipo(codigo.toString());
-                equipos.push(equipo);
+        try {
+            const resLiga = await CLiga.obtenerLiga(liga);
+            if (resLiga) {
+                Liga = resLiga;
+                const codigosEquipos = Liga.Equipos;
+                Equipos = await Promise.all(
+                    codigosEquipos.map(codigo => CEquipo.obtenerEquipo(codigo.toString())),
+                );
             }
-            Equipos = equipos;
-        }
-        const resTorneo = await CTorneo.obtenerPorLiga(liga);
-        if (resTorneo) {
-            Torneos = resTorneo;
+            const resTorneo = await CTorneo.obtenerPorLiga(liga);
+            if (resTorneo) {
+                Torneos = resTorneo;
+            }
+        } catch (error) {
+            ErrorPersonalizado.errorAPI(error);
         }
     });
 </script>
@@ -59,7 +61,7 @@
                 <div class="columns">
                     <div class="column">
                         <p class="has-text-weight-semibold">Equipos</p>
-                        <p>19</p>
+                        <p>{Liga.Equipos.length}</p>
                     </div>
                     <div class="column">
                         <p class="has-text-weight-semibold">Inicio</p>
@@ -77,13 +79,17 @@
 
 <div class="container_cards mb-6">
     <Indicador icono="fluent:people-team-16-filled" titulo="Equipos" indicador={Liga.Equipos.length} />
-    <Indicador icono="solar:cup-star-bold" titulo="Torneos" indicador={2} />
+    <Indicador icono="solar:cup-star-bold" titulo="Torneos" indicador={Torneos.length} />
 </div>
 
 <div class="tabs">
     <ul>
-        <li class={Tab === 'TORNEO' ? 'is-active' : ''}><a onclick={() => (Tab = 'TORNEO')}>Torneos</a></li>
-        <li class={Tab === 'EQUIPO' ? 'is-active' : ''}><a onclick={() => (Tab = 'EQUIPO')}>Equipos</a></li>
+        <li class={Tab === 'TORNEO' ? 'is-active' : ''}>
+            <button type="button" onclick={() => (Tab = 'TORNEO')}>Torneos</button>
+        </li>
+        <li class={Tab === 'EQUIPO' ? 'is-active' : ''}>
+            <button type="button" onclick={() => (Tab = 'EQUIPO')}>Equipos</button>
+        </li>
     </ul>
 </div>
 {#if Tab === 'TORNEO'}

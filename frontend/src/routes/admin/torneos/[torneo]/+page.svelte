@@ -6,7 +6,6 @@
     import CTorneo from '$lib/core/Torneo/Application/CTorneo.js';
     import Indicador from '$lib/components/Administracion/Indicador.svelte';
 
-    debugger;
     let torneo = page.params.torneo;
     let Torneo: TTorneoAPI = $state(crearObjeto());
     let liga = $state(0);

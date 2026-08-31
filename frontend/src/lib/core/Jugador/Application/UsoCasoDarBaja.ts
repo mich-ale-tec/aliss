@@ -1,7 +1,7 @@
 import CJugador from '$lib/core/Jugador/Application/CJugador.js';
 import type { TJugador } from '$lib/core/Jugador/Domain/TJugador.js';
 import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
-import axios from 'axios';
+import { api } from '$lib/core/shared/Infraestructure/api.js';
 import { mostrarToast } from '../../../../store/ToastStore.js';
 
 export default class UsoCasoDarBaja extends CJugador {
@@ -24,8 +24,7 @@ export default class UsoCasoDarBaja extends CJugador {
         }
     }
     private async darBaja(): Promise<TJugador> {
-        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Jugador/darBaja`;
-        const res = await axios.post<TJugador>(url, {
+        const res = await api.post<TJugador>('/Administracion/Jugador/darBaja', {
             Codigo: this.Codigo,
         });
         return res.data as TJugador;

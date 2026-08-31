@@ -13,7 +13,7 @@
     }
 </script>
 
-<nav class="pagination" role="navigation" aria-label="pagination">
+<nav class="pagination" aria-label="Paginación">
     <!--    <a class="pagination-previous is-disabled" title="This is the first page">Previous</a>-->
     <!--    <a href="#" class="pagination-next">Next page</a>-->
     <ul class="pagination-list">

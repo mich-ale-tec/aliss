@@ -1,7 +1,7 @@
 import CJugador from '$lib/core/Jugador/Application/CJugador.js';
 import type { TJugador } from '$lib/core/Jugador/Domain/TJugador.js';
 import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
-import axios from 'axios';
+import { api } from '$lib/core/shared/Infraestructure/api.js';
 import { mostrarToast } from '../../../../store/ToastStore.js';
 
 export default class UsoCasoAgregar extends CJugador {
@@ -24,8 +24,7 @@ export default class UsoCasoAgregar extends CJugador {
         }
     }
     private async agregar(): Promise<TJugador> {
-        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Jugador/agregar`;
-        const res = await axios.post<TJugador>(url, {
+        const res = await api.post<TJugador>('/Administracion/Jugador/agregar', {
             Equipo: this.Equipo,
             Numero: this.Numero,
             ApellidoPaterno: this.ApellidoPaterno,

@@ -1,6 +1,6 @@
 import { mostrarToast } from '../../../../store/ToastStore.js';
 import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
-import axios from 'axios';
+import { api } from '$lib/core/shared/Infraestructure/api.js';
 import type { TTorneoAPI } from '$lib/core/Torneo/Domain/TTorneo.js';
 import CTorneo from '$lib/core/Torneo/Application/CTorneo.js';
 
@@ -24,8 +24,7 @@ export default class UsoCasoAgregar extends CTorneo {
         }
     }
     private async agregar(): Promise<TTorneoAPI> {
-        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Torneo/agregar`;
-        const res = await axios.post<TTorneoAPI>(url, {
+        const res = await api.post<TTorneoAPI>('/Administracion/Torneo/agregar', {
             Nombre: this.Nombre,
             Descripcion: this.Descripcion,
             Logo: this.Logo,

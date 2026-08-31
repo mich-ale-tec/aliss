@@ -11,9 +11,11 @@
     import Ordenamiento from '$lib/components/Ordenamiento.svelte';
 
     let JugadoresCompletos: TJugadorDashboard[] = $state([]);
-    let Jugadores: TJugadorDashboard[] = $state([]);
     const pedazo: number = 50;
     let paginaActual: number = $state(1);
+    const Jugadores: TJugadorDashboard[] = $derived(
+        JugadoresCompletos.slice((paginaActual - 1) * pedazo, paginaActual * pedazo),
+    );
 
     const cambiarPaginaActual = (pagina: number) => {
         paginaActual = pagina;
@@ -39,10 +41,6 @@
         }
         JugadoresCompletos = jugadoresOrdenados;
     };
-    $effect(() => {
-        Jugadores = JugadoresCompletos.slice((paginaActual - 1) * pedazo, paginaActual * pedazo);
-    });
-
     onMount(async () => {
         try {
             JugadoresCompletos = await CJugador.obtenerJugadoresDashboard();
@@ -128,10 +126,29 @@
                 {/each}
             </tbody>
         </table>
+    {:else}
+        <div class="estado_vacio">
+            <div class="icono_vacio">
+                <Icon
+                    icon="fluent:people-team-16-filled"
+                    width="64"
+                    height="64"
+                    class="has-text-grey-light" />
+            </div>
+            <p class="is-size-5 has-text-weight-semibold mt-4">Aún no hay jugadores registrados</p>
+            <p class="has-text-grey mt-2 mb-4">
+                Comienza registrando tu primer jugador para empezar a gestionar tus equipos.
+            </p>
+            <a href="/admin/equipos/0/nuevo" class="button is-link is-outlined">
+                <Icon icon="mingcute:plus-fill" style="margin-right: 5px" width="20" height="20" />
+                Registra mi primer jugador
+            </a>
+        </div>
     {/if}
 </div>
 
 <style lang="scss">
+    @use '../lib/styles//ElementoVacio.scss' as *;
     .container_jugadores {
         padding: 1rem 2rem;
         border: 1px solid rgb(238, 238, 238);

@@ -2,7 +2,7 @@ import CEquipo from '$lib/core/Equipo/Application/Equipo.js';
 import type { TEquipo } from '$lib/core/Equipo/Domain/TEquipo.js';
 import { mostrarToast } from '../../../../store/ToastStore.js';
 import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
-import axios from 'axios';
+import { api } from '$lib/core/shared/Infraestructure/api.js';
 
 export default class UsoCasoAgregar extends CEquipo {
     constructor(equipo: TEquipo) {
@@ -24,8 +24,7 @@ export default class UsoCasoAgregar extends CEquipo {
         }
     }
     private async agregar(): Promise<TEquipo> {
-        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Equipo/agregar`;
-        const res = await axios.post<TEquipo>(url, {
+        const res = await api.post<TEquipo>('/Administracion/Equipo/agregar', {
             Nombre: this.Nombre,
             Breve: this.Breve,
             Descripcion: this.Descripcion,

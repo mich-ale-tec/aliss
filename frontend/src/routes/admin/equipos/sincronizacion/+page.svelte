@@ -1,49 +1,49 @@
 <script lang="ts">
-    import Icon from '@iconify/svelte';
-    import type { TEquipoDashboard } from '$lib/core/Equipo/Domain/TEquipo.js';
-    import CEquipo from '$lib/core/Equipo/Application/Equipo.js';
-    import { onMount } from 'svelte';
+    import Breadcrumb from '$lib/components/Administracion/Breadcrumb.svelte';
     import Pag from '$lib/components/Pag.svelte';
+    import type { TEquipoDashboard } from '$lib/core/Equipo/Domain/TEquipo.js';
+    import { PATHS_SINCRONIZACION } from '$lib/core/Equipo/Utils/breadcrumbPaths.js';
+    import Icon from '@iconify/svelte';
+    import CEquipo from '$lib/core/Equipo/Application/Equipo.js';
     import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
 
     let Equipos: Array<TEquipoDashboard> = $state([]);
-    let EquiposPedazo: Array<TEquipoDashboard> = $state([]);
     const pedazo: number = 10;
+
     let paginaActual: number = $state(1);
+    let cargando = $state(false);
+    const EquiposPedazo: Array<TEquipoDashboard> = $derived(
+        Equipos.slice((paginaActual - 1) * pedazo, paginaActual * pedazo),
+    );
 
     const cambiarPaginaActual = (pagina: number) => {
         paginaActual = pagina;
     };
-    $effect(() => {
-        EquiposPedazo = Equipos.slice((paginaActual - 1) * pedazo, paginaActual * pedazo);
-    });
 
-    onMount(async () => {
+    async function actualizarListado() {
+        cargando = true;
         try {
             Equipos = await CEquipo.obtenerEquiposDashboard();
+            paginaActual = 1;
         } catch (error) {
             ErrorPersonalizado.errorAPI(error);
+        } finally {
+            cargando = false;
         }
-    });
+    }
 </script>
 
-<nav class="breadcrumb mt-6" aria-label="breadcrumbs">
-    <ul>
-        <li><a href="/">Inicio</a></li>
-        <li><a href="/admin">Administración</a></li>
-        <li class="is-active"><a href="/admin/equipos" aria-current="page">Equipos</a></li>
-    </ul>
-</nav>
+<Breadcrumb paths={PATHS_SINCRONIZACION} />
 
 <div class="columns">
     <div class="column">
-        <p class="title">Gestión de Equipo</p>
-        <p class="subtitle">Administra todos los equipos de la Liga 1</p>
+        <p class="title">Sincronizar Equipos</p>
+        <p class="subtitle">Actualiza el listado disponible de equipos de la Liga 1</p>
     </div>
     <div class="column col_acciones">
-        <a href="/admin/equipos/0/nuevo" class="button is-link">
-            <Icon icon="mingcute:plus-fill" style="margin-right: 5px" width="24" height="24" />
-            Agregar Equipo</a>
+        <button class="button is-link" onclick={actualizarListado} disabled={cargando}>
+            <Icon icon="mdi:cog-sync" style="margin-right: 5px" width="24" height="24" />
+            {cargando ? 'Actualizando...' : 'Actualizar listado'}</button>
     </div>
 </div>
 
@@ -77,6 +77,10 @@
                 {/each}
             </tbody>
         </table>
+    {:else if !cargando}
+        <p class="has-text-grey has-text-centered">
+            Usa “Actualizar listado” para consultar los equipos registrados.
+        </p>
     {/if}
 </div>
 

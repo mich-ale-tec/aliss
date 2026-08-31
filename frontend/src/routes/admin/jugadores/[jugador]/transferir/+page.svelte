@@ -9,7 +9,7 @@
     import Icon from '@iconify/svelte';
     import UsoCasoTransferir from '$lib/core/Jugador/Application/UsoCasoTransferir.js';
     import { onMount } from 'svelte';
-    import {ErrorPersonalizado} from "$lib/core/shared/Infraestructure/ErrorPersonalizado.js";
+    import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
 
     let equipo = page.url.searchParams.get('equipo');
     let jugador = page.params.jugador;

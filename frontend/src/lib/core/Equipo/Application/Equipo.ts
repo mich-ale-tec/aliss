@@ -1,5 +1,5 @@
 import type { TEquipo, TEquipoDashboard } from '$lib/core/Equipo/Domain/TEquipo.js';
-import axios from 'axios';
+import { api } from '$lib/core/shared/Infraestructure/api.js';
 import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
 import type { TEstadistica } from '$lib/core/Equipo/Domain/Estadistica.js';
 
@@ -47,18 +47,15 @@ export default class CEquipo {
         }
     }
     static async obtenerEquipos(): Promise<Array<TEquipo>> {
-        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Equipo/obtener`;
-        const res = await axios.get(url);
+        const res = await api.get('/Administracion/Equipo/obtener');
         return res.data as Array<TEquipo>;
     }
     static async obtenerEquiposDashboard(): Promise<Array<TEquipoDashboard>> {
-        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Equipo/obtenerDashboard`;
-        const res = await axios.get(url);
+        const res = await api.get('/Administracion/Equipo/obtenerDashboard');
         return res.data as Array<TEquipoDashboard>;
     }
     static async obtenerEquipo(codigo: string): Promise<TEquipo> {
-        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Equipo/obtenerPorCodigo`;
-        const res = await axios.post(url, {
+        const res = await api.post('/Administracion/Equipo/obtenerPorCodigo', {
             Equipo: parseInt(codigo),
         });
         const EQUIPO = res.data as TEquipo;
@@ -74,8 +71,7 @@ export default class CEquipo {
         };
     }
     static async estadistica(): Promise<TEstadistica> {
-        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Equipo/estadistica`;
-        const res = await axios.get(url);
+        const res = await api.get('/Administracion/Equipo/estadistica');
         return res.data as TEstadistica;
     }
     private esNumero(valor: string): boolean {

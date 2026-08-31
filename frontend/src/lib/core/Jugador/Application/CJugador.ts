@@ -1,6 +1,6 @@
 import type { TJugador, TJugadorDashboard } from '$lib/core/Jugador/Domain/TJugador.js';
 import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
-import axios from 'axios';
+import { api } from '$lib/core/shared/Infraestructure/api.js';
 import type { TEstadistica } from '$lib/core/Jugador/Domain/Estadistica.js';
 
 export default class CJugador {
@@ -111,8 +111,7 @@ export default class CJugador {
         return typeof valor === 'number' ? valor : parseInt(valor);
     }
     static async obtenerJugador(codigo: string): Promise<TJugador> {
-        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Jugador/obtenerPorCodigo`;
-        const response = await axios.post(url, {
+        const response = await api.post('/Administracion/Jugador/obtenerPorCodigo', {
             Codigo: parseInt(codigo),
         });
         const JUGADOR = response.data as TJugador;
@@ -126,10 +125,9 @@ export default class CJugador {
         };
     }
     static async obtenerJugadoresDashboard(): Promise<TJugadorDashboard[]> {
-        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Jugador/obtenerDashboard`;
-        const response = await axios.get(url);
+        const response = await api.get('/Administracion/Jugador/obtenerDashboard');
         const JUGADORES = response.data as Array<TJugadorDashboard>;
-        return JUGADORES.map((e, i) => ({
+        return JUGADORES.map(e => ({
             ...e,
             Numero: e.Numero || 0,
             Posicion: e.Posicion || '',
@@ -139,8 +137,7 @@ export default class CJugador {
     }
 
     static async obternerJugadorePorEquipo(equipo: string): Promise<Array<TJugador>> {
-        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Jugador/obtenerPorEquipo`;
-        const response = await axios.post(url, {
+        const response = await api.post('/Administracion/Jugador/obtenerPorEquipo', {
             Equipo: parseInt(equipo),
         });
         const JUGADORES = response.data as Array<TJugador>;
@@ -154,8 +151,7 @@ export default class CJugador {
         }));
     }
     static async estadistica(): Promise<TEstadistica> {
-        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Jugador/estadistica`;
-        const res = await axios.get(url);
+        const res = await api.get('/Administracion/Jugador/estadistica');
         return res.data as TEstadistica;
     }
 }

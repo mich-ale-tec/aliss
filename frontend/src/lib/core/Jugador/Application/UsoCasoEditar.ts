@@ -1,6 +1,6 @@
 import type { TJugador } from '$lib/core/Jugador/Domain/TJugador.js';
 import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
-import axios from 'axios';
+import { api } from '$lib/core/shared/Infraestructure/api.js';
 import { mostrarToast } from '../../../../store/ToastStore.js';
 import CJugador from '$lib/core/Jugador/Application/CJugador.js';
 
@@ -24,8 +24,7 @@ export default class UsoCasoEditar extends CJugador {
         }
     }
     private async editar(): Promise<TJugador> {
-        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Jugador/editar`;
-        const res = await axios.patch<TJugador>(url, {
+        const res = await api.patch<TJugador>('/Administracion/Jugador/editar', {
             Codigo: this.Codigo,
             Numero: this.Numero,
             ApellidoPaterno: this.ApellidoPaterno,

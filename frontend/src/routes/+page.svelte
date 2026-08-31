@@ -1,11 +1,6 @@
 <script lang="ts">
-    import { PUBLIC_URL_BACKEND } from '$env/static/public';
     import Icon from '@iconify/svelte';
-    import { onMount } from 'svelte';
     import Navbar from '$lib/components/Navbar.svelte';
-    onMount(() => {
-        window.localStorage.setItem('URL_BACKEND', PUBLIC_URL_BACKEND);
-    });
 </script>
 
 <Navbar />
@@ -24,7 +19,14 @@
         }
     }
     .btn-preguntas {
-        color: white;
-        background-color: #725752;
+        color: var(--aliss-ink);
+        background-color: var(--aliss-gold);
+        border: 0;
+
+        &:hover,
+        &:focus-visible {
+            color: var(--aliss-ink);
+            background-color: #c99f04;
+        }
     }
 </style>

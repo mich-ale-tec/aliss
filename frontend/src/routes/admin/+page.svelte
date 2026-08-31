@@ -13,8 +13,10 @@
 
     onMount(async () => {
         try {
-            CEquipo.estadistica().then(e => (EstadisticaEquipo = e));
-            CJugador.estadistica().then(e => (EstadisticaJugador = e));
+            [EstadisticaEquipo, EstadisticaJugador] = await Promise.all([
+                CEquipo.estadistica(),
+                CJugador.estadistica(),
+            ]);
         } catch (error) {
             ErrorPersonalizado.errorAPI(error);
         }
@@ -55,7 +57,11 @@
             <div class="content has-text-centered">
                 Administra todos los equipos de la liga,<br /> sus entrenadores y estadísticas
             </div>
-            <a href="/admin/equipos" class="button btn_administrar is-link">Administrar Equipos</a>
+            <div class="is-flex is-flex-direction-column is-gap-1">
+                <a href="/admin/equipos/lista" class="button btn_administrar is-link">Administrar Equipos</a>
+                <a href="/admin/equipos/sincronizacion" class="button btn_administrar is-link is-outlined"
+                    >Sincronizar Equipos</a>
+            </div>
         </div>
     </div>
     <div class="card card_administrar">
@@ -70,6 +76,18 @@
                 Administra todos los jugadores, sus posiciones<br />y rendimiento
             </div>
             <a href="/admin/jugadores" class="button btn_administrar is-link">Administrar Jugadores</a>
+        </div>
+    </div>
+    <div class="card card_administrar">
+        <div class="card-content">
+            <div class="media">
+                <div class="media-content has-text-centered">
+                    <Icon icon="tabler:tournament" width="46" />
+                    <p class="title is-4">Gestión de Torneos</p>
+                </div>
+            </div>
+            <div class="content has-text-centered">Administra todos los torneos<br />&nbsp;</div>
+            <a href="/admin/torneos" class="button btn_administrar is-link">Administrar Torneos</a>
         </div>
     </div>
     <div class="card card_administrar">

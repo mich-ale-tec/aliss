@@ -1,6 +1,6 @@
 import type { TTorneoAPI } from '$lib/core/Torneo/Domain/TTorneo.js';
 import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
-import axios from 'axios';
+import { api } from '$lib/core/shared/Infraestructure/api.js';
 
 export default class CTorneo {
     protected readonly Codigo: number;
@@ -36,8 +36,7 @@ export default class CTorneo {
     }
     static async obtenerPorCodigo(codigo: string): Promise<TTorneoAPI | void> {
         try {
-            const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Torneo/obtenerPorCodigo`;
-            const res = await axios.post(url, {
+            const res = await api.post('/Administracion/Torneo/obtenerPorCodigo', {
                 Codigo: parseInt(codigo),
             });
             return res.data as TTorneoAPI;
@@ -47,8 +46,7 @@ export default class CTorneo {
     }
     static async obtenerPorLiga(codigo: string): Promise<TTorneoAPI[] | void> {
         try {
-            const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Torneo/obtenerPorLiga`;
-            const res = await axios.post(url, {
+            const res = await api.post('/Administracion/Torneo/obtenerPorLiga', {
                 Liga: parseInt(codigo),
             });
             return res.data as TTorneoAPI[];

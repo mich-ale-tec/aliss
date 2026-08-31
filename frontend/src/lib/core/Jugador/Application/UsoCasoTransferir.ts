@@ -2,7 +2,7 @@ import CJugador from '$lib/core/Jugador/Application/CJugador.js';
 import type { TJugador } from '$lib/core/Jugador/Domain/TJugador.js';
 import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
 import { mostrarToast } from '../../../../store/ToastStore.js';
-import axios from 'axios';
+import { api } from '$lib/core/shared/Infraestructure/api.js';
 
 export default class UsoCasoTransferir extends CJugador {
     constructor(jugador: TJugador) {
@@ -24,8 +24,7 @@ export default class UsoCasoTransferir extends CJugador {
         }
     }
     private async transferir(equipo: string): Promise<TJugador> {
-        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Jugador/transferir`;
-        const res = await axios.post<TJugador>(url, {
+        const res = await api.post<TJugador>('/Administracion/Jugador/transferir', {
             Codigo: this.Codigo,
             Equipo: parseInt(equipo),
         });

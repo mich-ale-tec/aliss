@@ -1,6 +1,6 @@
 import type { TEntityMain } from '$lib/core/preguntas/Domain/EntityMain.js';
 import type { IModificarPregunta } from '$lib/core/preguntas/Domain/IModificarPregunta.js';
-import axios from 'axios';
+import { api } from '$lib/core/shared/Infraestructure/api.js';
 import { mostrarToast } from '../../../../store/ToastStore.js';
 import UsoCasoAlmacenarResultado, {
     type TResultadoPregunta,
@@ -16,10 +16,8 @@ export default class CPregunta {
         this.NroPregunta = nroPregunta;
         this.Respuesta = respuesta;
     }
-    public async validarRespuestas(resultado: UsoCasoAlmacenarResultado): Promise<TResultadoPregunta> {
-        // if (resultado.existeResultado()) return resultado.obtenerResultado();
-        const url = `${localStorage.getItem('URL_BACKEND')}/Cuestionario/Respuesta/validar`;
-        const res = await axios.post(url, {
+    public async validarRespuestas(): Promise<TResultadoPregunta> {
+        const res = await api.post('/Cuestionario/Respuesta/validar', {
             Respuestas: this.Respuestas.join(':'),
         });
         const RESULTADO = res.data;
@@ -27,8 +25,7 @@ export default class CPregunta {
         return RESULTADO;
     }
     public async obtenerPreguntas(props: IModificarPregunta): Promise<void> {
-        const url = `${localStorage.getItem('URL_BACKEND')}/Cuestionario/Pregunta/obtener`;
-        const res = await axios.get(url);
+        const res = await api.get('/Cuestionario/Pregunta/obtener');
         this.Preguntas = res.data;
         props.almacenarPreguntas(this.Preguntas);
     }

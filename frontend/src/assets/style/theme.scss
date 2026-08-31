@@ -1,0 +1,13 @@
+@use "./_variable.scss" as *;
+
+.hero {
+  &.is-link {
+    background-color: $color-primary-500;
+  }
+}
+
+.button {
+  &.is-link {
+    background-color: $color-primary-500;
+  }
+}

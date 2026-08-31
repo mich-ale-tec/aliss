@@ -6,14 +6,11 @@
     import Icon from '@iconify/svelte';
     import Resultado from '$lib/components/Resultado.svelte';
     import Progress from '$lib/components/Progress.svelte';
-    import UsoCasoAlmacenarResultado from '$lib/core/Respuesta/Application/UsoCasoAlmacenarResultado.js';
     import Navbar from '$lib/components/Navbar.svelte';
 
-    const resultado = new UsoCasoAlmacenarResultado('1');
     // Variables
     const PREGUNTAS: TEntityMain[] = [];
     const NRO_PREGUNTA: number = 0;
-    // const SE_TERMINO: boolean = resultado.existeResultado();
     const SE_TERMINO: boolean = false;
     const RESPUESTA: string = '';
     // State
@@ -36,38 +33,150 @@
 </script>
 
 <Navbar />
-<div class="contenedor">
+<main class="quiz-shell">
+    <section class="quiz-heading">
+        <div class="quiz-heading__icon"><Icon icon="solar:clipboard-check-bold" width="30" /></div>
+        <div>
+            <p class="quiz-heading__eyebrow">Módulo de evaluación</p>
+            <h1>Evaluación de jugadores</h1>
+            <p>Responde cada pregunta para registrar tu resultado diario.</p>
+        </div>
+    </section>
+
     {#if SeTermino}
-        {#await pregunta.validarRespuestas(resultado)}
-            <h3>Cargando...</h3>
+        {#await pregunta.validarRespuestas()}
+            <section class="quiz-panel quiz-loading">
+                <Icon icon="line-md:loading-twotone-loop" width="42" />
+                <p>Calculando resultado...</p>
+            </section>
         {:then valor}
             <Resultado resultado={valor} />
         {/await}
     {:else if Preguntas.length > 0}
-        <Progress nroPregunta={NroPregunta} nroPreguntas={Preguntas.length} />
-        {#key Preguntas[NroPregunta].id}
-            <Pregunta pregunta={Preguntas[NroPregunta]} bind:respuesta={Respuesta} />
-            <button
-                class="button is-primary btn-siguiente"
-                onclick={() => pregunta.UsoCasoSolicitarPreguntas(Props, Respuesta)}>
-                <Icon icon="carbon:next-outline" width="25" style="margin-right:5px" />
-                {NroPregunta + 1 < Preguntas.length ? 'Siguiente' : 'Terminar'}
-            </button>
-        {/key}
+        <section class="quiz-panel">
+            <Progress nroPregunta={NroPregunta} nroPreguntas={Preguntas.length} />
+            {#key Preguntas[NroPregunta].id}
+                <Pregunta pregunta={Preguntas[NroPregunta]} bind:respuesta={Respuesta} />
+                <div class="quiz-actions">
+                    <span>Selecciona una alternativa para continuar</span>
+                    <button
+                        class="button btn-siguiente"
+                        onclick={() => pregunta.UsoCasoSolicitarPreguntas(Props, Respuesta)}>
+                        {NroPregunta + 1 < Preguntas.length ? 'Siguiente' : 'Finalizar evaluación'}
+                        <Icon icon="carbon:arrow-right" width="20" />
+                    </button>
+                </div>
+            {/key}
+        </section>
+    {:else}
+        <section class="quiz-panel quiz-loading">
+            <Icon icon="line-md:loading-twotone-loop" width="42" />
+            <p>Cargando preguntas...</p>
+        </section>
     {/if}
-</div>
+</main>
 
 <style lang="scss">
-    .contenedor {
+    .quiz-shell {
+        width: min(100% - 2rem, 860px);
+        margin: 3rem auto;
+    }
+
+    .quiz-heading {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+
+        h1 {
+            margin: 0;
+            color: var(--aliss-navy);
+            font-size: clamp(1.6rem, 4vw, 2.25rem);
+            font-weight: 750;
+        }
+
+        p {
+            margin: 0.25rem 0 0;
+            color: var(--aliss-slate);
+        }
+    }
+
+    .quiz-heading__icon {
+        display: grid;
+        width: 3.5rem;
+        height: 3.5rem;
+        place-items: center;
+        color: var(--aliss-ink);
+        background: #fff1b8;
+        border-radius: 0.85rem;
+    }
+
+    .quiz-heading__eyebrow {
+        color: var(--aliss-red) !important;
+        font-size: 0.75rem;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    .quiz-panel {
+        padding: clamp(1.25rem, 4vw, 2.5rem);
+        background: var(--aliss-surface);
+        border: 1px solid var(--aliss-border);
+        border-top: 5px solid var(--aliss-gold);
+        border-radius: 1rem;
+        box-shadow: 0 12px 28px rgba(8, 76, 97, 0.1);
+    }
+
+    .quiz-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 1.25rem;
+        color: var(--aliss-slate);
+        border-top: 1px solid var(--aliss-border);
+        font-size: 0.875rem;
+    }
+
+    .btn-siguiente {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--aliss-ink);
+        background: var(--aliss-gold);
+        border: 0;
+        font-weight: 750;
+
+        &:hover,
+        &:focus-visible {
+            color: var(--aliss-ink);
+            background: #c99f04;
+        }
+    }
+
+    .quiz-loading {
+        display: grid;
+        min-height: 210px;
+        place-content: center;
+        gap: 0.75rem;
+        color: var(--aliss-slate);
         text-align: center;
-        margin-top: 200px;
-        width: 80%;
-        margin-left: auto;
-        margin-right: auto;
+    }
+
+    @media (max-width: 560px) {
+        .quiz-shell {
+            margin-top: 1.5rem;
+        }
+
+        .quiz-actions {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
         .btn-siguiente {
-            color: white;
-            background-color: #725752;
-            margin-top: 30px;
+            justify-content: center;
         }
     }
 </style>

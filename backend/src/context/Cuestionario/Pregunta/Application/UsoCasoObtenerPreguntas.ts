@@ -15,6 +15,7 @@ export default class UsoCasoObtenerPreguntas extends UsoCaso {
     private readonly repoEquipo: RMEquipo;
     constructor(ctx: ParameterizedContext) {
         super(ctx);
+        // Se deberia usar a inyección de depencias
         this.repoJugador = new RMImplJugador(this.lanzarError);
         this.repoEquipo = new RMImplEquipo(this.lanzarError);
     }

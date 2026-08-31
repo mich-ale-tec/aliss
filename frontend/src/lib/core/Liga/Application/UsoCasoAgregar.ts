@@ -1,6 +1,6 @@
 import { mostrarToast } from '../../../../store/ToastStore.js';
 import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
-import axios from 'axios';
+import { api } from '$lib/core/shared/Infraestructure/api.js';
 import CLiga from '$lib/core/Liga/Application/CLiga.js';
 import type { TLigaAPI } from '$lib/core/Liga/Domain/TLiga.js';
 
@@ -24,8 +24,7 @@ export default class UsoCasoAgregar extends CLiga {
         }
     }
     private async agregar(): Promise<TLigaAPI> {
-        const url = `${localStorage.getItem('URL_BACKEND')}/Administracion/Liga/agregar`;
-        const res = await axios.post<TLigaAPI>(url, {
+        const res = await api.post<TLigaAPI>('/Administracion/Liga/agregar', {
             Nombre: this.Nombre,
             Descripcion: this.Descripcion,
             Logo: this.Logo,

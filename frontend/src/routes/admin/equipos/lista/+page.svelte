@@ -1,0 +1,112 @@
+<script lang="ts">
+    import Icon from '@iconify/svelte';
+    import type { TEquipoDashboard } from '$lib/core/Equipo/Domain/TEquipo.js';
+    import CEquipo from '$lib/core/Equipo/Application/Equipo.js';
+    import { onMount } from 'svelte';
+    import Pag from '$lib/components/Pag.svelte';
+    import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
+    import Breadcrumb from '$lib/components/Administracion/Breadcrumb.svelte';
+    import { PATHS_LISTA } from '$lib/core/Equipo/Utils/breadcrumbPaths.js';
+
+    let Equipos: Array<TEquipoDashboard> = $state([]);
+    const pedazo: number = 10;
+    let paginaActual: number = $state(1);
+    let cargando = $state(true);
+    const EquiposPedazo: Array<TEquipoDashboard> = $derived(
+        Equipos.slice((paginaActual - 1) * pedazo, paginaActual * pedazo),
+    );
+
+    const cambiarPaginaActual = (pagina: number) => {
+        paginaActual = pagina;
+    };
+
+    onMount(async () => {
+        try {
+            Equipos = await CEquipo.obtenerEquiposDashboard();
+        } catch (error) {
+            ErrorPersonalizado.errorAPI(error);
+        } finally {
+            cargando = false;
+        }
+    });
+</script>
+
+<Breadcrumb paths={PATHS_LISTA} />
+
+<div class="columns">
+    <div class="column">
+        <p class="title">Gestión de Equipo</p>
+        <p class="subtitle">Administra todos los equipos de la Liga 1</p>
+    </div>
+    <div class="column col_acciones">
+        <a href="/admin/equipos/0/nuevo" class="button is-link">
+            <Icon icon="mingcute:plus-fill" style="margin-right: 5px" width="24" height="24" />
+            Agregar Equipo</a>
+    </div>
+</div>
+
+<div class="container_equipos">
+    {#if cargando}
+        <div class="estado_vacio">Cargando equipos...</div>
+    {:else if EquiposPedazo.length > 0}
+        <Pag numeroRegistros={Equipos.length} {pedazo} {cambiarPaginaActual} {paginaActual} />
+        <table class="table is-hoverable is-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Equipo</th>
+                    <th>Entrenador</th>
+                    <th>Jugadores</th>
+                    <th>Fundado</th>
+                    <th>Editar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {#each EquiposPedazo as equipo (equipo.Codigo)}
+                    <tr>
+                        <td><img class="img_logo" src={equipo.Logo} alt="logo" /></td>
+                        <td><a href="/admin/equipos/{equipo.Codigo}">{equipo.Nombre}</a></td>
+                        <td>{equipo.Entrenador}</td>
+                        <td class="has-text-centered">{equipo.CantidadJugadores}</td>
+                        <td>{equipo.Fundado}</td>
+                        <td class="has-text-centered"
+                            ><a class="button" href="/admin/equipos/{equipo.Codigo}/editar"
+                                ><Icon icon="fluent:edit-20-filled" color="black" /></a>
+                        </td>
+                    </tr>
+                {/each}
+            </tbody>
+        </table>
+    {:else}
+        <div class="estado_vacio">
+            <div class="icono_vacio">
+                <Icon icon="guidance:stadium" width="64" height="64" class="has-text-grey-light" />
+            </div>
+            <p class="is-size-5 has-text-weight-semibold mt-4">Aún no hay equipos registrados</p>
+            <p class="has-text-grey mt-2 mb-4">
+                Comienza creando tu primer equipo para empezar a gestionar tus torneos.
+            </p>
+            <a href="/admin/equipos/0/nuevo" class="button is-link is-outlined">
+                <Icon icon="mingcute:plus-fill" style="margin-right: 5px" width="20" height="20" />
+                Crear mi primer equipo
+            </a>
+        </div>
+    {/if}
+</div>
+
+<style lang="scss">
+    .container_equipos {
+        padding: 1rem 2rem;
+        border: 1px solid rgb(238, 238, 238);
+        border-radius: 1rem;
+        .img_logo {
+            height: 30px;
+            width: auto;
+        }
+    }
+    .col_acciones {
+        margin-top: auto;
+        margin-bottom: auto;
+        text-align: end;
+    }
+</style>
