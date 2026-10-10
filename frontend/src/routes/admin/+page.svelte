@@ -23,13 +23,6 @@
     });
 </script>
 
-<section class="hero is-link">
-    <div class="hero-body">
-        <p class="title">Panel de Administración</p>
-        <p class="subtitle">Gestiona equipos, jugadores y estadísticas de la liga de fútbol</p>
-    </div>
-</section>
-
 <div class="container_cards">
     <Indicador icono="guidance:stadium" titulo="Total Equipos" indicador={EstadisticaEquipo.Cantidad} />
     <Indicador
@@ -59,8 +52,6 @@
             </div>
             <div class="is-flex is-flex-direction-column is-gap-1">
                 <a href="/admin/equipos/lista" class="button btn_administrar is-link">Administrar Equipos</a>
-                <a href="/admin/equipos/sincronizacion" class="button btn_administrar is-link is-outlined"
-                    >Sincronizar Equipos</a>
             </div>
         </div>
     </div>

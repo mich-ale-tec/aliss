@@ -40,24 +40,23 @@
     </div>
 {/snippet}
 
-<nav class="breadcrumb mt-6" aria-label="breadcrumbs">
+<nav class="breadcrumb" aria-label="breadcrumbs">
     <ul>
         <li><a href="/">Inicio</a></li>
-        <li><a href="/admin">Administración</a></li>
         {#if equipo}
-            <li><a href="/admin/equipos">Equipos</a></li>
-            <li><a href="/admin/equipos/{equipo}">Equipo</a></li>
+            <li><a href="/equipos/lista">Equipos</a></li>
+            <li><a href="/equipos/{equipo}">Equipo</a></li>
         {:else}
-            <li><a href="/admin/jugadores">Jugadores</a></li>
+            <li><a href="/jugadores">Jugadores</a></li>
         {/if}
         <li class="is-active">
-            <a href="/admin/jugadores/jugador" aria-current="page">Nuevo</a>
+            <a href="/jugadores/jugador" aria-current="page">Nuevo</a>
         </li>
     </ul>
 </nav>
 
 <div class="columns">
-    <div class="column is-half is-offset-one-quarter">
+    <div class="column">
         <h1 class="title is-4">
             {obtenerLabelNombres(Jugador)}
         </h1>

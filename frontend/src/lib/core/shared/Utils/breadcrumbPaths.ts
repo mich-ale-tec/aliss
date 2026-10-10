@@ -7,8 +7,4 @@ export const PATHS_BREADCRUMB: TPathBreadcrumb[] = [
         href: '/',
         name: 'Inicio',
     },
-    {
-        href: '/admin',
-        name: 'Administración',
-    },
 ];

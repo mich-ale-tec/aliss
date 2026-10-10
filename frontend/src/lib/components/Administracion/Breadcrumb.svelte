@@ -7,7 +7,7 @@
     let { paths }: PropsBreadcrumb = $props();
 </script>
 
-<nav class="breadcrumb mt-6" aria-label="breadcrumbs">
+<nav class="breadcrumb" aria-label="breadcrumbs">
     <ul>
         {#if Boolean(paths.length)}
             {#each paths as path, index (path.href)}
@@ -20,3 +20,23 @@
         {/if}
     </ul>
 </nav>
+
+<style lang="scss">
+    @use '_variable.scss' as *;
+    li {
+        &.is-active {
+            a {
+                color: $color-primary-500;
+                &:hover {
+                    color: $color-primary-500;
+                }
+            }
+        }
+        a {
+            color: $color-primary-500;
+            &:hover {
+                color: $color-primary-500;
+            }
+        }
+    }
+</style>

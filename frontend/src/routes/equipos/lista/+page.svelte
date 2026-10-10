@@ -3,10 +3,11 @@
     import type { TEquipoDashboard } from '$lib/core/Equipo/Domain/TEquipo.js';
     import CEquipo from '$lib/core/Equipo/Application/Equipo.js';
     import { onMount } from 'svelte';
-    import Pag from '$lib/components/Pag.svelte';
+    import Pager from '$lib/components/Pager.svelte';
     import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
     import Breadcrumb from '$lib/components/Administracion/Breadcrumb.svelte';
     import { PATHS_LISTA } from '$lib/core/Equipo/Utils/breadcrumbPaths.js';
+    import Tabla from '$lib/components/equipos/Tabla.svelte';
 
     let Equipos: Array<TEquipoDashboard> = $state([]);
     const pedazo: number = 10;
@@ -39,7 +40,7 @@
         <p class="subtitle">Administra todos los equipos de la Liga 1</p>
     </div>
     <div class="column col_acciones">
-        <a href="/admin/equipos/0/nuevo" class="button is-link">
+        <a href="/equipos/0/nuevo" class="button is-link">
             <Icon icon="mingcute:plus-fill" style="margin-right: 5px" width="24" height="24" />
             Agregar Equipo</a>
     </div>
@@ -49,34 +50,8 @@
     {#if cargando}
         <div class="estado_vacio">Cargando equipos...</div>
     {:else if EquiposPedazo.length > 0}
-        <Pag numeroRegistros={Equipos.length} {pedazo} {cambiarPaginaActual} {paginaActual} />
-        <table class="table is-hoverable is-striped">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Equipo</th>
-                    <th>Entrenador</th>
-                    <th>Jugadores</th>
-                    <th>Fundado</th>
-                    <th>Editar</th>
-                </tr>
-            </thead>
-            <tbody>
-                {#each EquiposPedazo as equipo (equipo.Codigo)}
-                    <tr>
-                        <td><img class="img_logo" src={equipo.Logo} alt="logo" /></td>
-                        <td><a href="/admin/equipos/{equipo.Codigo}">{equipo.Nombre}</a></td>
-                        <td>{equipo.Entrenador}</td>
-                        <td class="has-text-centered">{equipo.CantidadJugadores}</td>
-                        <td>{equipo.Fundado}</td>
-                        <td class="has-text-centered"
-                            ><a class="button" href="/admin/equipos/{equipo.Codigo}/editar"
-                                ><Icon icon="fluent:edit-20-filled" color="black" /></a>
-                        </td>
-                    </tr>
-                {/each}
-            </tbody>
-        </table>
+        <Pager numeroRegistros={Equipos.length} {pedazo} {cambiarPaginaActual} {paginaActual} />
+        <Tabla equipos={EquiposPedazo} />
     {:else}
         <div class="estado_vacio">
             <div class="icono_vacio">
@@ -86,7 +61,7 @@
             <p class="has-text-grey mt-2 mb-4">
                 Comienza creando tu primer equipo para empezar a gestionar tus torneos.
             </p>
-            <a href="/admin/equipos/0/nuevo" class="button is-link is-outlined">
+            <a href="/equipos/0/nuevo" class="button is-link is-outlined">
                 <Icon icon="mingcute:plus-fill" style="margin-right: 5px" width="20" height="20" />
                 Crear mi primer equipo
             </a>
@@ -95,18 +70,16 @@
 </div>
 
 <style lang="scss">
+    @use '_variable' as *;
     .container_equipos {
         padding: 1rem 2rem;
         border: 1px solid rgb(238, 238, 238);
         border-radius: 1rem;
-        .img_logo {
-            height: 30px;
-            width: auto;
-        }
     }
     .col_acciones {
-        margin-top: auto;
-        margin-bottom: auto;
         text-align: end;
+        a {
+            background-color: $color-primary-500;
+        }
     }
 </style>

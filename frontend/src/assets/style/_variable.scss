@@ -1,26 +1,26 @@
-/* Paleta principal: rojo coral */
-$color-primary-50: #fdf0f1;
-$color-primary-100: #f9d8dc;
-$color-primary-200: #f2b0b9;
-$color-primary-300: #e98591;
-$color-primary-400: #d95e6c;
-$color-primary-500: #c83e4d; // principal
-$color-primary-600: #ad3542;
-$color-primary-700: #8b2b35;
-$color-primary-800: #682027;
-$color-primary-900: #45151a;
+/* Paleta principal: morado */
+$color-primary-50: #f1f0ff;
+$color-primary-100: #e4e2ff;
+$color-primary-200: #c9c6ff;
+$color-primary-300: #aaa4ff;
+$color-primary-400: #7972fa;
+$color-primary-500: #655fe8; // principal
+$color-primary-600: #554ed1;
+$color-primary-700: #463eb6;
+$color-primary-800: #393295;
+$color-primary-900: #2d286f;
 
 /* Paleta secundaria: amarillo cálido */
-$color-secondary-50: #fff8ef;
-$color-secondary-100: #feecd5;
-$color-secondary-200: #fdd9aa;
-$color-secondary-300: #fcc97f;
-$color-secondary-400: #fbc05f;
-$color-secondary-500: #fbba72; // secundario
-$color-secondary-600: #dd9d58;
-$color-secondary-700: #b67d43;
-$color-secondary-800: #895d31;
-$color-secondary-900: #5c3e20;
+$color-secondary-50: #f4f5f9;
+$color-secondary-100: #e5e8ef;
+$color-secondary-200: #ccd1dc;
+$color-secondary-300: #aeb6c7;
+$color-secondary-400: #7d879f;
+$color-secondary-500: #0B132B; // secundario
+$color-secondary-600: #080e20;
+$color-secondary-700: #060b1a;
+$color-secondary-800: #050914;
+$color-secondary-900: #03060d;
 
 /* Neutrals (cálidos, no grises puros) */
 $color-gray-0: #ffffff;
@@ -54,7 +54,7 @@ $fg-success: $color-success-500;
 $fg-warning: $color-warning-500;
 
 /* Fondos */
-$bg-canvas: $color-gray-50; // --bg
+$bg-canvas: $color-gray-0; // --bg
 $bg-surface: $color-gray-0; // --panel
 $bg-surface-subtle: $color-primary-50;
 $bg-accent: $color-secondary-500;
@@ -104,6 +104,9 @@ $lh-snug: 1.15;
 $lh-normal: 1.25;
 $lh-relaxed: 1.5;
 
+$fw-thin: 100;
+$fw-extralight: 200;
+$fw-light: 300;
 $fw-regular: 400;
 $fw-semibold: 600;
 $fw-bold: 700;
@@ -132,7 +135,11 @@ $sp-11: 1.625rem; // 26px
 $sp-12: 1.75rem; // 28px
 $sp-16: 2.25rem; // 36px
 $sp-20: 2.5rem; // 40px
-
+$sp-24: 3rem; // 40px
+$sp-32: 4rem; // 40px
+$sp-36: 4.5rem; // 40px
+$sp-40: 5rem; // 40px
+$sp-44: 5.5rem; // 40px
 /* ---------- Radii ---------- */
 $radius-xs: 2px;
 $radius-sm: 4px;

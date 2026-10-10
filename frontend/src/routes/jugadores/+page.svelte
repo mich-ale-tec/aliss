@@ -6,7 +6,7 @@
     import convertirJugadorDashAJugadorAPI from '$lib/core/Jugador/Utils/convertirEntity.js';
     import { obtenerLabelNombres } from '$lib/core/shared/Utils/convertirNombres.js';
     import { onMount } from 'svelte';
-    import Pag from '$lib/components/Pag.svelte';
+    import Pager from '$lib/components/Pager.svelte';
     import { ErrorPersonalizado } from '$lib/core/shared/Infraestructure/ErrorPersonalizado.js';
     import Ordenamiento from '$lib/components/Ordenamiento.svelte';
 
@@ -70,7 +70,7 @@
 </div>
 <div class="container_jugadores">
     {#if Jugadores.length > 0}
-        <Pag numeroRegistros={JugadoresCompletos.length} {pedazo} {cambiarPaginaActual} {paginaActual} />
+        <Pager numeroRegistros={JugadoresCompletos.length} {pedazo} {cambiarPaginaActual} {paginaActual} />
         <table class="table is-hoverable is-striped">
             <thead>
                 <tr>
@@ -148,7 +148,6 @@
 </div>
 
 <style lang="scss">
-    @use '../lib/styles//ElementoVacio.scss' as *;
     .container_jugadores {
         padding: 1rem 2rem;
         border: 1px solid rgb(238, 238, 238);

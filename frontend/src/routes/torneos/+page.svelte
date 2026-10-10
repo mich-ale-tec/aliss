@@ -23,7 +23,6 @@
 </div>
 
 <style lang="scss">
-    @use '../../../lib/styles//ElementoVacio.scss' as *;
     .col_acciones {
         margin-top: auto;
         margin-bottom: auto;

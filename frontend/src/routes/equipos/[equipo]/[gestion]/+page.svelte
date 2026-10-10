@@ -8,6 +8,9 @@
     import { goto } from '$app/navigation';
     import UsoCasoEditar from '$lib/core/Equipo/Application/UsoCasoEditar.js';
     import { onMount } from 'svelte';
+    import { PATHS_ACTUALIZAR } from '$lib/core/Equipo/Utils/breadcrumbPaths.js';
+    import Breadcrumb from '$lib/components/Administracion/Breadcrumb.svelte';
+    import { CapitalizarPalabra } from '../../../../shared/FCadena.js';
 
     type TKey = keyof TEquipo;
     type TLabel = string;
@@ -31,25 +34,13 @@
     </div>
 {/snippet}
 
-<nav class="breadcrumb mt-6" aria-label="breadcrumbs">
-    <ul>
-        <li><a href="/">Inicio</a></li>
-        <li><a href="/admin">Administración</a></li>
-        <li><a href="/admin/equipos">Equipos</a></li>
-        <li class="is-active">
-            <a href="/admin/equipos/equipo" aria-current="page">{accion === 'NUEVO' ? 'Nuevo' : 'Editar'}</a>
-        </li>
-    </ul>
-</nav>
+<Breadcrumb paths={PATHS_ACTUALIZAR(CapitalizarPalabra(accion))} />
 
 <div class="columns">
-    <div class="column is-half is-offset-one-quarter">
-        <h1 class="title is-4">{Equipo.Nombre}</h1>
-        {#if accion === 'NUEVO'}
-            <div class="field">
-                {@render input(Equipo, 'Nombre', 'Nombre')}
-            </div>
-        {/if}
+    <div class="column is-half">
+        <div class="field">
+            {@render input(Equipo, 'Nombre', 'Nombre')}
+        </div>
         <div class="field">
             {@render input(Equipo, 'Breve', 'Breve')}
         </div>
@@ -59,6 +50,8 @@
         <div class="field">
             {@render input(Equipo, 'Entrenador', 'Entrenador')}
         </div>
+    </div>
+    <div class="column is-half">
         <div class="field">
             {@render input(Equipo, 'Fundado', 'Fundado')}
         </div>
@@ -71,7 +64,10 @@
         <div class="field">
             {@render input(Equipo, 'Logo', 'Logo')}
         </div>
-
+    </div>
+</div>
+<div class="columns">
+    <div class="column">
         <div class="field is-grouped mt-5">
             <div class="control">
                 {#if accion === 'NUEVO'}
@@ -80,7 +76,7 @@
                         onclick={async () => {
                             const RESPONSE = await new UsoCasoAgregar(Equipo).iniciar();
                             if (RESPONSE) {
-                                await goto('/admin/equipos');
+                                await goto('/equipos');
                             }
                         }}>
                         <Icon style="margin-right: 5px" icon="fluent:save-16-filled" />
@@ -91,7 +87,7 @@
                         onclick={async () => {
                             const RESPONSE = await new UsoCasoEditar(Equipo).iniciar();
                             if (RESPONSE) {
-                                await goto('/admin/equipos');
+                                await goto('/equipos');
                             }
                         }}>
                         <Icon style="margin-right: 5px" icon="fluent:save-16-filled" />

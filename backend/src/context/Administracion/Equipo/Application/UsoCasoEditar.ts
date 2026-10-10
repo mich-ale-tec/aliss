@@ -22,6 +22,7 @@ export default class UsoCasoEditar extends UsoCaso {
         }
     }
     private async _init(client: MongoClient, body: TRequestEditar): Promise<TEquipo> {
+        debugger;
         const session = await this.repo.session(client);
         try {
             const opciones: Required<TOptions> = { Client: client, Session: session };

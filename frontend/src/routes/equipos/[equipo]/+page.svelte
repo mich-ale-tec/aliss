@@ -10,6 +10,8 @@
     import UsoCasoDarBaja from '$lib/core/Jugador/Application/UsoCasoDarBaja.js';
     import { obtenerLabelNombres } from '$lib/core/shared/Utils/convertirNombres.js';
     import { onMount } from 'svelte';
+    import { PATHS_VIEW } from '$lib/core/Equipo/Utils/breadcrumbPaths.js';
+    import Breadcrumb from '$lib/components/Administracion/Breadcrumb.svelte';
 
     let equipo = page.params.equipo;
     let Equipo: TEquipo = $state(crearObjeto());
@@ -21,14 +23,7 @@
     });
 </script>
 
-<nav class="breadcrumb mt-6" aria-label="breadcrumbs">
-    <ul>
-        <li><a href="/">Inicio</a></li>
-        <li><a href="/admin">Administración</a></li>
-        <li><a href="/admin/equipos">Equipos</a></li>
-        <li class="is-active"><a href="/admin/equipos/equipo" aria-current="page">Equipo</a></li>
-    </ul>
-</nav>
+<Breadcrumb paths={PATHS_VIEW(Equipo.Codigo, Equipo.Nombre)} />
 
 <div class="card card_equipo">
     <div class="card-content">
@@ -43,19 +38,19 @@
                 <p class="subtitle is-5">{Equipo.Descripcion}</p>
                 <div class="columns">
                     <div class="column">
-                        <p class="has-text-weight-semibold">Entrenador</p>
+                        <p class="has-text-weight-semibold text">Entrenador</p>
                         <p>{Equipo.Entrenador}</p>
                     </div>
                     <div class="column">
-                        <p class="has-text-weight-semibold">Fundado</p>
+                        <p class="has-text-weight-semibold text">Fundado</p>
                         <p>{Equipo.Fundado}</p>
                     </div>
                     <div class="column">
-                        <p class="has-text-weight-semibold">Estadio</p>
+                        <p class="has-text-weight-semibold text">Estadio</p>
                         <p>{Equipo.Estadio}</p>
                     </div>
                     <div class="column">
-                        <p class="has-text-weight-semibold">Ciudad</p>
+                        <p class="has-text-weight-semibold text">Ciudad</p>
                         <p>{Equipo.Ciudad}</p>
                     </div>
                 </div>
@@ -129,13 +124,14 @@
         </table>
     </div>
     <div class="column col_acciones is-2">
-        <a href="/admin/jugadores/0/nuevo?equipo={Equipo.Codigo}" class="button is-link">
+        <a href="/jugadores/0/nuevo?equipo={Equipo.Codigo}" class="button is-link">
             <Icon icon="mingcute:plus-fill" style="margin-right: 5px" width="24" height="24" />
             Agregar Jugador</a>
     </div>
 </div>
 
 <style lang="scss">
+    @use '_variable' as *;
     .planilla {
         box-shadow: none;
         border: 1px solid rgb(238, 238, 238);
@@ -155,10 +151,16 @@
     .col_acciones {
         margin-bottom: auto;
         text-align: end;
+        a {
+            background-color: $color-primary-500;
+        }
     }
     .container_indicadores {
         box-shadow: none;
         margin-left: 0;
         padding: 0;
+    }
+    .text {
+        font-size: $fs-md;
     }
 </style>

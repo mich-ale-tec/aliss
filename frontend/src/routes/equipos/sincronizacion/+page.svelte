@@ -1,6 +1,6 @@
 <script lang="ts">
     import Breadcrumb from '$lib/components/Administracion/Breadcrumb.svelte';
-    import Pag from '$lib/components/Pag.svelte';
+    import Pager from '$lib/components/Pager.svelte';
     import type { TEquipoDashboard } from '$lib/core/Equipo/Domain/TEquipo.js';
     import { PATHS_SINCRONIZACION } from '$lib/core/Equipo/Utils/breadcrumbPaths.js';
     import Icon from '@iconify/svelte';
@@ -49,7 +49,7 @@
 
 <div class="container_equipos">
     {#if EquiposPedazo.length > 0}
-        <Pag numeroRegistros={Equipos.length} {pedazo} {cambiarPaginaActual} {paginaActual} />
+        <Pager numeroRegistros={Equipos.length} {pedazo} {cambiarPaginaActual} {paginaActual} />
         <table class="table is-hoverable is-striped">
             <thead>
                 <tr>

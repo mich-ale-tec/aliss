@@ -14,8 +14,6 @@
 </script>
 
 <nav class="pagination" aria-label="Paginación">
-    <!--    <a class="pagination-previous is-disabled" title="This is the first page">Previous</a>-->
-    <!--    <a href="#" class="pagination-next">Next page</a>-->
     <ul class="pagination-list">
         {#each arregloBotones as numeroBoton (numeroBoton)}
             {#if paginaActual === numeroBoton}
@@ -36,3 +34,17 @@
         {/each}
     </ul>
 </nav>
+
+<style lang="scss">
+    @use '_variable' as *;
+    .pagination {
+        .pagination-list {
+            .pagination-link {
+                border-color: $color-primary-500;
+                &.is-current {
+                    background-color: $color-primary-500;
+                }
+            }
+        }
+    }
+</style>
